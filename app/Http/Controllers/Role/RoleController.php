@@ -17,6 +17,8 @@ class RoleController extends Controller
     public function list()
     {
         $this->data['roles'] = Role::select('id', 'name', 'is_important')->get();
+        $this->data['permissions'] = Permission::getRecord();
+        $this->data['rolePermissions'] = RolePermission::all();
         return Inertia::render('Role/RoleList', [
             ...$this->data
             , ...[
@@ -24,12 +26,6 @@ class RoleController extends Controller
                 'status' => session('status'),
             ]
         ]);
-    }
-
-    public function show()
-    {
-        $this->data['permissions'] = Permission::getRecord();
-        return Inertia::render('Role/RoleAdd', $this->data);
     }
 
     public function add(Role $role)
@@ -49,14 +45,6 @@ class RoleController extends Controller
         ]);
     }
 
-    public function edit($id)
-    {
-        $this->data['permissions'] = Permission::getRecord();
-        $this->data['getRolePermission'] = RolePermission::getRolePermission($id);
-        $this->data['getRoleDetail'] = Role::getRoleDetail($id);
-        return Inertia::render('Role/RoleEdit', [...$this->data, 'message' => session('message'), 'status' => session('status')]);
-    }
-
     public function update($id)
     {
         $credentials = request()->validate([
@@ -71,8 +59,9 @@ class RoleController extends Controller
             'name' => $credentials['name'],
             'is_important' => request('is_important'),
         ]);
+        $nameRole = $credentials['name'];
         return redirect()->route('role.list')->with([
-            'message' => 'Role updated successfully.',
+            'message' =>"$nameRole'role updated successfully.",
             'status' => true
         ]);
     }

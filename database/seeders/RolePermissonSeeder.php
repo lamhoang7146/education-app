@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
-class RolePermisson extends Seeder
+class RolePermissonSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -82,6 +82,78 @@ class RolePermisson extends Seeder
         DB::table('role_permissions')->insert([
             'role_id' => 1,
             'permission_id' => 12,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 13,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 14,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 15,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 16,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 17,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 18,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 19,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 20,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 21,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 22,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 23,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 24,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

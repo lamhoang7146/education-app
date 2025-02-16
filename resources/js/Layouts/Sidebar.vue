@@ -30,7 +30,7 @@ const user = ref(false);
                 :href="route('home')"
                 class=" flex justify-between items-center pl-4 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
                 <div class="flex items-center ">
-                    <div class="mr-2">
+                    <div class="mr-3">
                         <i class="fa-solid fa-house"></i>
                     </div>
                     <p>Home</p>
@@ -42,7 +42,7 @@ const user = ref(false);
                     :class="{'hover-selected dark:dark-hover-selected':component.includes('User')}"
                     class="flex justify-between items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md cursor-pointer">
                     <div class="flex items-center">
-                        <div class="mr-2">
+                        <div class="mr-4">
                             <i class="fa-solid fa-user"></i>
                         </div>
                         <p>User</p>
@@ -79,7 +79,7 @@ const user = ref(false);
                     :class="{'hover-selected dark:dark-hover-selected':component.includes('Role')}"
                     class="flex justify-between items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md cursor-pointer">
                     <div class="flex items-center">
-                        <div class="mr-2">
+                        <div class="mr-4">
                             <i class="fa-solid fa-lock"></i>
                         </div>
                         <p>Roles</p>
@@ -92,13 +92,6 @@ const user = ref(false);
                 </div>
                 <ul v-auto-animate>
                     <div v-if="role">
-                        <Link
-                            :href="route('role.show')"
-                            @click="emit('emitSidebar')"
-                            :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Role/RoleAdd'}"
-                            class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                            <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>Add
-                        </Link>
                         <Link
                             :href="route('role.list')"
                             @click="emit('emitSidebar')"

@@ -19,7 +19,4 @@ class RolePermission extends Model
             ]);
         }
     }
-    public static function getRolePermission($id){
-        return RolePermission::where('role_id', $id)->get();
-    }
 }
