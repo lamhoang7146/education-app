@@ -1,0 +1,27 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "build": "vite build",
+        "dev": "vite"
+    },
+    "devDependencies": {
+        "autoprefixer": "^10.4.20",
+        "axios": "^1.7.4",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^1.0",
+        "postcss": "^8.4.47",
+        "tailwindcss": "^3.4.13",
+        "vite": "^6.0"
+    },
+    "dependencies": {
+        "@formkit/auto-animate": "^0.8.2",
+        "@headlessui/vue": "^1.7.23",
+        "@iconify/vue": "^4.3.0",
+        "@inertiajs/vue3": "^2.0.0",
+        "@vitejs/plugin-vue": "^5.2.1",
+        "lodash": "^4.17.21",
+        "vue": "^3.5.13",
+        "ziggy-js": "^2.4.2"
+    }
+}

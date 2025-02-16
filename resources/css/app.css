@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+/* Tạo một component main */
+@layer components {
+
+
+    .main::-webkit-scrollbar {
+       @apply w-[7px];
+    }
+
+    .main::-webkit-scrollbar-track {
+         @apply bg-slate-300 rounded-lg;
+    }
+    .main::-webkit-scrollbar-thumb {
+        border-radius: 2px;
+        @apply bg-slate-500;
+    }
+    .main::-webkit-scrollbar-thumb:hover {
+        @apply bg-slate-700;
+    }
+    .sidebar::-webkit-scrollbar {
+        @apply w-[4px];
+    }
+
+    .sidebar::-webkit-scrollbar-track {
+        @apply bg-slate-500 rounded-lg;
+    }
+    .sidebar::-webkit-scrollbar-thumb {
+        border-radius: 2px;
+        background-color: #3C3F56;
+    }
+
+    .max-h-menu{
+        overflow-y: scroll;
+        overflow-x: hidden;
+    }
+    .dark-bg-content{
+        background-color: #2F3349;
+    }
+    .bg-content{
+        background-color: white;
+    }
+    .dark-bg-behind{
+        background-color: #25293B;
+    }
+    .bg-behind{
+        background-color: #F8F7FA;
+    }
+    .dark-text-primary{
+        color: #E1DEF5E6;
+    }
+    .text-primary{
+        color: #2F2B3DE6;
+    }
+    .dark-hover-selected{
+        background-color: #3C3F56;
+        color: #E1DEF5E6;
+    }
+    .hover-selected{
+        background-color: #F0F0F1;
+    }
+    .dark-selected{
+        background-color: #8278F2;
+        color: white;
+    }
+    .box-shadow-copy{
+        box-shadow: rgba(17, 17, 26, 0.1) 0px 0px 16px;
+    }
+}
