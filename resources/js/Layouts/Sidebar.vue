@@ -56,13 +56,6 @@ const user = ref(false);
                 <ul v-auto-animate>
                     <div v-if="user">
                         <Link
-                            :href="route('user.show')"
-                            @click="emit('emitSidebar')"
-                            :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'User/Show'}"
-                            class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                            <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>Add
-                        </Link>
-                        <Link
                             :href="route('user.list')"
                             @click="emit('emitSidebar')"
                             :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'User/List'}"

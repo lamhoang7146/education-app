@@ -12,16 +12,8 @@ use Predis\Client as Redis;
 class UserController extends Controller
 {
     private array $data = [];
-
-    public function show()
-    {
-        $this->data['roles'] = Role::select('id', 'name')->get();
-        return Inertia::render('User/Show', $this->data);
-    }
-
     public function store(Redis $redis)
     {
-
         $credentials = request()->validate([
             'name' => 'required|string|max:255|min:3',
             'email' => 'required|email',
@@ -65,13 +57,6 @@ class UserController extends Controller
         $user->status = !$user->status;
         $user->save();
         return back();
-    }
-
-    public function edit($id)
-    {
-        $this->data['user'] = User::find($id);
-        $this->data['roles'] = Role::select('id', 'name')->get();
-        return Inertia::render('User/Edit', $this->data);
     }
 
     public function update(User $user)
