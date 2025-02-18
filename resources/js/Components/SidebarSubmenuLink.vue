@@ -1,43 +1,47 @@
 <script setup>
 import {ref} from "vue";
 import {vAutoAnimate} from "@formkit/auto-animate";
-
-const isOpen = ref(false);
+const state = ref(false)
 defineProps({
-    component:String,
-    icon:String,
-    routeList:Object,
-    nameParent:String,
+    component:{
+        required:true,
+        type:String,
+    },
+    reference:{
+        required:true,
+        type:String,
+    },
+    name:{
+        type:String,
+        required:true,
+    },
+    icon:{
+        type:String,
+        required:true,
+    },
 })
-const emit = defineEmits(['emitSidebar'])
 </script>
 <template>
     <li>
         <div
-            @click="isOpen = !isOpen"
-            :class="{'hover-selected dark:dark-hover-selected':component.includes('Role')}"
+            @click="state = !state"
+            :class="{'hover-selected dark:dark-hover-selected':component.includes(reference)}"
             class="flex justify-between items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md cursor-pointer">
-            <div class="flex items-center">
-                <div class="mr-2">
-                    <i :class="`fa-solid fa-${icon}`"></i>
+            <div class="grid grid-cols-[35px_1fr]">
+                <div>
+                    <i :class="`fa-solid ${icon}`"></i>
                 </div>
-                <p>{{nameParent}}</p>
+                <p>{{name}}</p>
             </div>
             <div>
-                <i class="fa-solid fa-angle-right"></i>
+                <i
+                    :class="state ? 'transform rotate-90' : 'transform rotate-0'"
+                    class="fa-solid fa-angle-right transition"></i>
             </div>
         </div>
         <ul v-auto-animate>
-            <div v-if="isOpen">
-                <Link
-                    v-for="route in routeList"
-                    :key="route.ziggy"
-                    :href="route(route.ziggy)"
-                    @click="emit('emitSidebar')"
-                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === route.component}"
-                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>{{route.name}}
-                </Link>
+            <div v-if="state">
+                <slot></slot>
             </div>
         </ul>
     </li>

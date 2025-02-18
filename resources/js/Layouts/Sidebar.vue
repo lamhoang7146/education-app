@@ -3,6 +3,7 @@ import {usePage} from '@inertiajs/vue3';
 import {computed, ref} from "vue";
 import {vAutoAnimate} from "@formkit/auto-animate";
 import SidebarSubmenuLink from "../Components/SidebarSubmenuLink.vue";
+
 defineProps({
     sidebar: Boolean
 })
@@ -36,82 +37,38 @@ const user = ref(false);
                     <p>Home</p>
                 </div>
             </Link>
-            <li>
-                <div
-                    @click="user = !user"
-                    :class="{'hover-selected dark:dark-hover-selected':component.includes('User')}"
-                    class="flex justify-between items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md cursor-pointer">
-                    <div class="flex items-center">
-                        <div class="mr-4">
-                            <i class="fa-solid fa-user"></i>
-                        </div>
-                        <p>User</p>
-                    </div>
-                    <div>
-                        <i
-                            :class="user ? 'transform rotate-90' : 'transform rotate-0'"
-                            class="fa-solid fa-angle-right transition"></i>
-                    </div>
-                </div>
-                <ul v-auto-animate>
-                    <div v-if="user">
-                        <Link
-                            :href="route('user.list')"
-                            @click="emit('emitSidebar')"
-                            :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'User/List'}"
-                            class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                            <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
-                        </Link>
-                    </div>
-                </ul>
-            </li>
-
-            <li>
-                <div
-                    @click="role = !role"
-                    :class="{'hover-selected dark:dark-hover-selected':component.includes('Role')}"
-                    class="flex justify-between items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md cursor-pointer">
-                    <div class="flex items-center">
-                        <div class="mr-4">
-                            <i class="fa-solid fa-lock"></i>
-                        </div>
-                        <p>Roles</p>
-                    </div>
-                    <div>
-                        <i
-                            :class="role ? 'transform rotate-90' : 'transform rotate-0'"
-                            class="fa-solid fa-angle-right transition"></i>
-                    </div>
-                </div>
-                <ul v-auto-animate>
-                    <div v-if="role">
-                        <Link
-                            :href="route('role.list')"
-                            @click="emit('emitSidebar')"
-                            :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Role/RoleList'}"
-                            class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                            <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
-                        </Link>
-                    </div>
-                </ul>
-            </li>
-
-<!--            <SidebarSubmenuLink-->
-<!--                icon="lock"-->
-<!--                nameParent="Role"-->
-<!--                :component="component"-->
-<!--                :routeList="[{-->
-<!--             ziggy: 'role.show',-->
-<!--             component:'Role/RoleAdd',-->
-<!--             name:'Add role'-->
-<!--            },-->
-<!--            {-->
-<!--             ziggy: 'role.list',-->
-<!--             component:'Role/RoleList',-->
-<!--             name:'List role'-->
-<!--            }-->
-<!--            ]"-->
-<!--            />-->
+            <SidebarSubmenuLink icon="fa-graduation-cap" name="Courses" reference="Courses" :component="component">
+                <Link
+                    :href="route('courses.index')"
+                    @click="emit('emitSidebar')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/List'}"
+                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
+                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
+                </Link>
+            </SidebarSubmenuLink>
+            <SidebarSubmenuLink icon="fa-user" name="Users" reference="User" :component="component">
+                <Link
+                    :href="route('user.list')"
+                    @click="emit('emitSidebar')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'User/List'}"
+                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
+                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
+                </Link>
+            </SidebarSubmenuLink>
+            <SidebarSubmenuLink
+                :component="component"
+                reference="Role"
+                name="Roles"
+                icon="fa-lock"
+            >
+                <Link
+                    :href="route('role.list')"
+                    @click="emit('emitSidebar')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Role/RoleList'}"
+                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
+                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
+                </Link>
+            </SidebarSubmenuLink>
         </ul>
     </div>
 </template>

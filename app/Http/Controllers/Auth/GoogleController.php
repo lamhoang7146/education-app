@@ -10,7 +10,7 @@ use Laravel\Socialite\Facades\Socialite;
 class GoogleController extends Controller
 {
     public function redirectToGoogle(){
-        dd(Socialite::driver('google')->redirect());
+        return Socialite::driver('google')->redirect();
     }
     public function handleGoogleCallback(){
         try{

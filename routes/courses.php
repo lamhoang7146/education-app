@@ -1,7 +1,4 @@
 <?php
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
-
-Route::get('/test', function () {
-    dd(\App\Models\Permission::getRecord());
-});
+use App\Http\Controllers\Courses\CoursesController;
+Route::get("/courses",[CoursesController::class,'index'])->name('courses.index');
