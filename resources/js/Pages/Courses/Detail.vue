@@ -35,7 +35,7 @@ const test = ref(false)
     <div class="flex gap-x-5">
 
         <div class="w-2/3">
-            <Container class="p-0">
+            <Container class="p-1">
                 <div>
                     <TabGroup>
                         <TabList class="flex items-center gap-x-2 border-b-[1px] border-gray-200 pb-4">
