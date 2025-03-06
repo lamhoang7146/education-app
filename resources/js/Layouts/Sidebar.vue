@@ -9,8 +9,6 @@ defineProps({
 })
 const emit = defineEmits(['emitSidebar'])
 const component = computed(() => usePage().component)
-const role = ref(false);
-const user = ref(false);
 </script>
 <template>
     <div
@@ -37,11 +35,20 @@ const user = ref(false);
                     <p>Home</p>
                 </div>
             </Link>
-            <SidebarSubmenuLink icon="fa-graduation-cap" name="Courses" reference="Courses" :component="component">
+            <SidebarSubmenuLink icon="fa-graduation-cap" name="Courses" reference="Courses/List" :component="component">
                 <Link
                     :href="route('courses.index')"
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/List'}"
+                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
+                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
+                </Link>
+            </SidebarSubmenuLink>
+            <SidebarSubmenuLink icon="fa-bars-progress" name="Courses management" reference="CoursesManagement/Index" :component="component">
+                <Link
+                    :href="route('courses.management')"
+                    @click="emit('emitSidebar')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/CoursesManagement/Index'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
                     <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
                 </Link>
