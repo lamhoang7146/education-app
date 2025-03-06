@@ -41,16 +41,16 @@ const component = computed(() => usePage().component)
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/List'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
-            <SidebarSubmenuLink icon="fa-bars-progress" name="Courses management" reference="CoursesManagement/Index" :component="component">
+            <SidebarSubmenuLink icon="fa-bars-progress" name="Courses management" reference="CoursesManagement" :component="component">
                 <Link
-                    :href="route('courses.management')"
+                    :href="route('courses.management.category')"
                     @click="emit('emitSidebar')"
-                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/CoursesManagement/Index'}"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagement/Category'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Category
                 </Link>
             </SidebarSubmenuLink>
             <SidebarSubmenuLink icon="fa-user" name="Users" reference="User" :component="component">
@@ -59,7 +59,7 @@ const component = computed(() => usePage().component)
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'User/List'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
             <SidebarSubmenuLink
@@ -73,7 +73,7 @@ const component = computed(() => usePage().component)
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Role/RoleList'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span><i class="fa-regular fa-circle text-xs mr-2"></i></span>List
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
         </ul>

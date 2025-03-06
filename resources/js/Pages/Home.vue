@@ -10,7 +10,7 @@ import { route } from 'ziggy-js';
                 <span>Các khóa học có giá từ 299.000 ₫. Nhận ưu đãi học viên mới trước khi ưu đãi hết hạn.</span>
             </div>
             <div>
-                <img src="../../../public/storage/banner_home.jpg" alt="">
+<!--                <img src="../../../public/storage/banner_home.jpg" alt="">-->
             </div>
         </Container>
 

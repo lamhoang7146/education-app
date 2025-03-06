@@ -51,6 +51,7 @@ return new class extends Migration
         Schema::create('category_courses', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            $table->string('description',255);
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->tinyInteger('status');
@@ -133,7 +134,6 @@ return new class extends Migration
             $table->integer('last_activity')->index();
         });
     }
-
     /**
      * Reverse the migrations.
      */
