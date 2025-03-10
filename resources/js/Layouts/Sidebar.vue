@@ -48,9 +48,16 @@ const component = computed(() => usePage().component)
                 <Link
                     :href="route('courses.management.category')"
                     @click="emit('emitSidebar')"
-                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagement/Category'}"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagementCategory/Category'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Category
+                </Link>
+                <Link
+                    :href="route('courses.management.courses')"
+                    @click="emit('emitSidebar')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagementCourses/Courses'}"
+                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Courses
                 </Link>
             </SidebarSubmenuLink>
             <SidebarSubmenuLink icon="fa-user" name="Users" reference="User" :component="component">

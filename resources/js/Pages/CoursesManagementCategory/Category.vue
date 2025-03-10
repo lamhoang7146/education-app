@@ -180,7 +180,7 @@ const handleUpdateCategory = () => {
                     <span @click="isEditCategory = false"
                           class="border-[1px] border-gray-200 px-3 rounded-md flex items-center justify-center cursor-pointer">Cancel
                     </span>
-                    <Button :disabled="formEditCategory.processing" class="px-3 text-sm">Create Category</Button>
+                    <Button :disabled="formEditCategory.processing" class="px-3 text-sm">Update Category</Button>
                 </div>
             </form>
         </Container>

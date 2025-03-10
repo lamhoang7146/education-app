@@ -5,6 +5,7 @@ import LayoutAuth from "../../Layouts/LayoutAuth.vue";
 import {useForm} from "@inertiajs/vue3";
 import {vAutoAnimate} from "@formkit/auto-animate";
 import MessageSession from "../../Components/MessageSession.vue";
+import {route} from "ziggy-js";
 
 defineOptions({
     layout: LayoutAuth

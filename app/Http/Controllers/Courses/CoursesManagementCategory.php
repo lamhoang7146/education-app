@@ -15,7 +15,7 @@ class CoursesManagementCategory extends Controller
     public function category()
     {
         $this->data['category_courses'] = Category_courses::all();
-        return Inertia::render('CoursesManagement/Category', [...$this->data,...[
+        return Inertia::render('CoursesManagementCategory/Category', [...$this->data,...[
             'message'=>session('message'),
             'status'=>session('status'),
         ]]);

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->tinyInteger('is_important')->default(false);
+            $table->boolean('is_important')->default(false);
             $table->timestamps();
         });
         Schema::create('users', function (Blueprint $table) {
@@ -62,11 +62,11 @@ return new class extends Migration
             $table->string('title');
             $table->text('description');
             $table->string('thumbnail');
-            $table->decimal('price');
+            $table->decimal('price',10,0)->nullable();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('category_courses_id');
-            $table->tinyInteger("is_free");
-            $table->enum("level",["ease","medium","hard","extremely"]);
+            $table->boolean("is_free")->default(false);
+            $table->enum("level",['Easy','Medium','Hard','Extremely']);
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('category_courses_id')->references('id')->on('category_courses');
             $table->tinyInteger('status');

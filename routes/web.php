@@ -13,6 +13,7 @@ require_once __DIR__ . '/roles.php';
 require_once __DIR__ . '/user.php';
 require_once __DIR__ . '/coursesManagement.php';
 require_once __DIR__ . '/coursesManagementCategory.php';
+require_once __DIR__ . '/coursesManagementCourses.php';
 
 Route::post('/get-data',function(){
     dd(request()->all());
