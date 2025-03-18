@@ -23,4 +23,11 @@ class Courses extends Model
     public function categoryCourses(){
         return $this->belongsTo(Category_courses::class);
     }
+    public function scopeFilter($query, array $categoryCoursesId)
+    {
+        if (isset($categoryCoursesId[0]) && $categoryCoursesId[0] !== null) {
+            return $query->where('category_courses_id', $categoryCoursesId[0]);
+        }
+        return $query;
+    }
 }

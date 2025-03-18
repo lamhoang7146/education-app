@@ -28,17 +28,16 @@ const makeLabel = (label) => {
                        preserve-scroll
 
                        v-html="makeLabel(link.label)"
-                       class="border-x border-slate-50 w-12 h-12 grid place-items-center bg-white transition"
+                       class=" w-12 h-12 grid place-items-center transition"
                        :class="{
-            ' hover:bg-slate-300': link.url,
+            'hover:hover-selected dark:hover:dark-hover-selected': link.url,
             'text-zinc-400': !link.url,
             'font-bold text-blue-500': link.active,
           }"
             />
         </div>
 
-
-        <p class="text-slate-600 text-sm">
+        <p class="text-sm">
             Showing {{ paginator.from }} to {{ paginator.to }} of {{ paginator.total }} results
         </p>
     </div>

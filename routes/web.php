@@ -14,7 +14,6 @@ require_once __DIR__ . '/user.php';
 require_once __DIR__ . '/coursesManagement.php';
 require_once __DIR__ . '/coursesManagementCategory.php';
 require_once __DIR__ . '/coursesManagementCourses.php';
-
-Route::post('/get-data',function(){
-    dd(request()->all());
-})->name('send.data');
+require_once __DIR__ . '/coursesManagementVideo.php';
+require_once __DIR__ . '/coursesManagementQuiz.php';
+require_once __DIR__ . '/coursesManagementQuizDetail.php';

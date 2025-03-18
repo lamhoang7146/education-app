@@ -13,12 +13,13 @@ use Inertia\Inertia;
 class CoursesManagementCourses extends Controller
 {
     private array $data = [];
-
     public function courses()
     {
         $this->data['category_courses'] = Category_courses::select('id', 'name')->where('status', true)->get();
         $this->data['courses'] = Courses::with(['user','categoryCourses'])
             ->select("*")
+            ->filter([request('category_courses_id')])
+            ->latest()
             ->paginate(8)
             ->withQueryString();
         return Inertia::render('CoursesManagementCourses/Courses', [

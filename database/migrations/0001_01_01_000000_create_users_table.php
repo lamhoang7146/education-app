@@ -72,6 +72,32 @@ return new class extends Migration
             $table->tinyInteger('status');
             $table->timestamps();
         });
+
+        Schema::create('quizzes', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 255);
+            $table->tinyInteger('status');
+            $table->timestamps();
+        });
+        Schema::create('quiz_content_details', function (Blueprint $table) {
+            $table->id();
+            $table->string('question', 255);
+            $table->string('answers', 255);
+            $table->string('result', 255);
+            $table->unsignedBigInteger('quiz_id');
+            $table->foreign('quiz_id')->references('id')->on('quizzes');
+            $table->timestamps();
+        });
+
+        Schema::create('videos', function (Blueprint $table) {
+            $table->id();
+            $table->string('youtube_id', 255);
+            $table->string('title', 255);
+            $table->text('description');
+            $table->tinyInteger('status');
+            $table->timestamps();
+        });
+
         Schema::create('courses_content', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
@@ -81,40 +107,12 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('quiz_content', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 255);
-            $table->tinyInteger('status');
-            $table->timestamps();
-        });
-        Schema::create('quiz_content_detail', function (Blueprint $table) {
-            $table->id();
-            $table->string('question', 255);
-            $table->string('answer', 255);
-            $table->string('result', 255);
-            $table->unsignedBigInteger('quiz_content_id');
-            $table->foreign('quiz_content_id')->references('id')->on('quiz_content');
-            $table->timestamps();
-        });
-        Schema::create('videos', function (Blueprint $table) {
-            $table->id();
-            $table->string('youtube_id', 255);
-            $table->string('title', 255);
-            $table->text('description');
-            $table->integer('duration');
-            $table->tinyInteger('status');
-            $table->timestamps();
-        });
-
         Schema::create('courses_content_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('courses_content_id');
             $table->foreign('courses_content_id')->references('id')->on('courses_content');
             $table->enum('content_type', ['video', 'quiz']);
-            $table->unsignedBigInteger('video_id')->nullable();
-            $table->unsignedBigInteger('quiz_content_id')->nullable();
-            $table->foreign('video_id')->references('id')->on('videos');
-            $table->foreign('quiz_content_id')->references('id')->on('quiz_content');
+            $table->unsignedBigInteger('content_id'); // ID chung cho cả video và quiz
             $table->tinyInteger('status');
             $table->timestamps();
         });

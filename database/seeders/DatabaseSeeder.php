@@ -2,8 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Role;
-use App\Models\User;
+use App\Models\Quiz_content_detail;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
@@ -21,7 +20,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             RolePermissonSeeder::class,
             CategoryCoursesSeeder::class,
-            Courses::class
+            Courses::class,
+            QuizSeeder::class,
+            QuizContentDetailSeeder::class,
         ]);
     }
 }

@@ -5,10 +5,11 @@ import {computed, ref, watch} from "vue";
 import {Listbox, ListboxButton, ListboxOption, ListboxOptions, Switch} from "@headlessui/vue";
 import InputField from "../../Components/InputField.vue";
 import Modal from "../../Components/Modal.vue";
-import {useForm} from "@inertiajs/vue3";
+import {router, useForm} from "@inertiajs/vue3";
 import {vAutoAnimate} from "@formkit/auto-animate";
 import Tiptap from "../../Components/Tiptap.vue";
 import {route} from "ziggy-js";
+const params = route().params;
 import MessageSession from "../../Components/MessageSession.vue";
 import PaginationLinks from "../../Components/PaginationLinks.vue";
 function formatCurrency(amount) {
@@ -24,6 +25,15 @@ const props = defineProps({
     message: String,
     status: Boolean
 })
+
+let selectedCategory = ref(props.category_courses.find(item=> item.id === parseInt(params.category_courses_id)));
+const categoryCoursesParams = ref([{id:null,name:'Select category'},...props.category_courses]);
+watch(selectedCategory, (newCategory) => {
+    router.get(route('courses.management.courses'), {
+        category_courses_id: newCategory ? newCategory.id : null,
+    })
+})
+
 const levels = [
     {
         id: 0,
@@ -42,14 +52,17 @@ const levels = [
         name: 'Extremely'
     }
 ];
+
 const statusAddCourses = ref(false)
 watch(statusAddCourses, (newStatus) => {
     formAddCourses.status = newStatus;
 });
+
 const statusAddCoursesFree = ref(false)
 watch(statusAddCoursesFree, (newStatus) => {
     formAddCourses.isFree = newStatus;
 });
+
 const isOpenAddCourses = ref(false)
 const closeAddCourses = () => {
     isOpenAddCourses.value = false;
@@ -468,9 +481,32 @@ const url = computed(() => {
         </Container>
     </Modal>
     <Container class="flex justify-between items-center">
-        <div>
-            <h1 class="font-medium text-xl">Courses</h1>
-            <p class="text-base">Manage your courses</p>
+        <div class="flex items-center gap-x-4">
+            <div>
+                <h1 class="font-medium text-xl">Courses</h1>
+                <p class="text-base">Manage your courses</p>
+            </div>
+            <div>
+                <Listbox v-model="selectedCategory">
+                    <div class="relative">
+                        <ListboxButton class="border-[1px] border-gray-200 rounded-md py-2 px-4 text-left min-w-40 text-sm">
+                            {{ selectedCategory?.name || 'Select category' }}
+                        </ListboxButton>
+                        <transition name="list">
+                            <ListboxOptions
+                                class="absolute top-[120%] bg-behind dark:dark-bg-behind rounded-md p-2 box-shadow-copy w-full z-30">
+                                <ListboxOption
+                                    class="cursor-pointer p-2 text-sm hover:hover-selected dark:hover:dark-hover-selected transition rounded-md"
+                                    v-for="item in categoryCoursesParams"
+                                    :key="item.id"
+                                    :value="item">
+                                    {{ item.name }}
+                                </ListboxOption>
+                            </ListboxOptions>
+                        </transition>
+                    </div>
+                </Listbox>
+            </div>
         </div>
         <div>
             <Button @click="openAddCourses" class="!py-[5px] px-3"><span><i
@@ -483,7 +519,7 @@ const url = computed(() => {
         <div class="rounded-md overflow-hidden box-shadow-copy" v-for="item in courses.data">
             <div class="relative">
                 <img class="h-40 object-cover w-full" :src="`/storage/${item.thumbnail}`" alt="">
-                <div class="text-xs absolute left-4 top-4 bg-gray-200 py-1 px-3 text-black font-medium rounded-full">{{ item.category_courses.name }}</div>
+                <div class="text-xs absolute left-4 top-3 bg-gray-200 py-1 px-3 text-black font-medium rounded-full">{{ item.category_courses.name }}</div>
                 <div class="text-xs absolute top-4 right-4">
                                             <span v-if="item.level.includes('Easy')"
                                                   class="bg-green-100 py-1 px-3 rounded-full text-green-500  font-medium">Easy</span>
@@ -512,7 +548,7 @@ const url = computed(() => {
                     </div>
                 </div>
                 <h1 class="mt-3 mb-1 font-medium text-sm line-clamp-2 h-12">{{ item.title }}</h1>
-                <div class="flex items-center gap-x-4 text-xs">
+                <div class="flex items-center gap-x-2 text-xs">
                     <div
                         class="dark:dark-hover-selected font-medium px-3 py-2 rounded-md cursor-pointer border-[1px] dark:border-none border-gray-200 w-full flex items-center justify-center"><span>
                             <i class="fa-solid fa-book-open mr-1 text-sm"></i></span> Contents

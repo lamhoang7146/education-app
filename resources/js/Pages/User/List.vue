@@ -27,8 +27,6 @@ const props = defineProps({
     status: Boolean
 })
 
-
-
 let roles = props.roles;
 
 const statuses = [
@@ -41,12 +39,15 @@ const statuses = [
         name: 'Active'
     }
 ];
+
 const getRoleParam = roles.filter(item => {
     return item.id === parseInt(params?.selectedRole?.id)
 });
+
 const getStatusParam = statuses.filter(item => {
     return item.id === parseInt(params?.selectedStatus?.id)
 });
+
 let selectedRole = ref(getRoleParam[0]);
 let selectedStatus = ref(getStatusParam[0]);
 let username = ref(props.search);
@@ -125,13 +126,13 @@ const formEdit = useForm({
     preview: null,
 })
 const showEdit = id => {
-    isCloseEdit.value = true
-    const user = props.users.data.find(item => item.id === id)
+    isCloseEdit.value = true;
+    const user = props.users.data.find(item => item.id === id);
     formEdit.id = user.id;
-    formEdit.name = user.name
-    formEdit.email = user.email
-    formEdit.selectedRole = props.roles.find(item => item.id === user?.get_role?.id)
-    formEdit.selectedStatus = statuses.find(item => item.id === user?.status)
+    formEdit.name = user.name;
+    formEdit.email = user.email;
+    formEdit.selectedRole = props.roles.find(item => item.id === user?.get_role?.id);
+    formEdit.selectedStatus = statuses.find(item => item.id === user?.status);
     formEdit.image = user.image;
 }
 const chooseFileEdit = e => {
