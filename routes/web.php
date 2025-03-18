@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\uploadController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
