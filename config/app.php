@@ -3,7 +3,7 @@
 return [
 
 
-    // 'youtube'  => env('YOUTUBE_API_KEY',''),
+    'youtube'  => env('YOUTUBE_API_KEY',''),
     /*
     |--------------------------------------------------------------------------
     | Application Name
