@@ -2,10 +2,18 @@
 
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
+use App\Http\Controllers\YouTubeController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
+
+Route::get('/upload-video-form', function () {
+    return Inertia::render('UploadVideo/UploadVideo');
+})->name('upload-video-form');
+
+Route::post('/api/upload-video', [YouTubeController::class, 'uploadVideo'])->name('api.upload-video');
+Route::get('/oauth2callback', [YouTubeController::class, 'oauth2callback'])->name('oauth2callback');
 
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/courses.php';
