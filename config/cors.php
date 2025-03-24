@@ -35,7 +35,8 @@ return [
     'allowed_origins' => [
         'http://127.0.0.1:8000',
         'https://accounts.google.com',
-        'https://www.googleapis.com'
+        'https://www.googleapis.com',
+        'https://accounts.google.com/o/oauth2/auth/',
     ],
     'allowed_headers' => ['*'],
     'exposed_headers' => [],

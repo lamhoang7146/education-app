@@ -10,6 +10,7 @@ defineProps({
 const emit = defineEmits(['emitSidebar'])
 const component = computed(() => usePage().component)
 </script>
+
 <template>
     <div
         :class="{'translate-x-[0%]':sidebar}"
@@ -97,6 +98,18 @@ const component = computed(() => usePage().component)
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
+            <Link
+                :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'UploadVideoForm'}"
+                @click="emit('emitSidebar')"
+                :href="route('upload-video-form')"
+                class=" flex justify-between items-center pl-4 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
+                <div class="flex items-center ">
+                    <div class="mr-3">
+                        <i class="fa-solid fa-upload"></i>
+                    </div>
+                    <p>Upload Video</p>
+                </div>
+            </Link>
         </ul>
     </div>
 </template>
