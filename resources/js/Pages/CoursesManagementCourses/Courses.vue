@@ -549,10 +549,11 @@ const url = computed(() => {
                 </div>
                 <h1 class="mt-3 mb-1 font-medium text-sm line-clamp-2 h-12">{{ item.title }}</h1>
                 <div class="flex items-center gap-x-2 text-xs">
-                    <div
+                    <Link
+                        :href="route('courses.management.courses.content',{id:item.id})"
                         class="dark:dark-hover-selected font-medium px-3 py-2 rounded-md cursor-pointer border-[1px] dark:border-none border-gray-200 w-full flex items-center justify-center"><span>
                             <i class="fa-solid fa-book-open mr-1 text-sm"></i></span> Contents
-                    </div>
+                    </Link>
                     <div
                         @click="openEditCourses(item.id)"
                         class=" dark:dark-hover-selected font-medium px-3 py-2 rounded-md border-[1px] dark:border-none border-gray-200 cursor-pointer w-full flex items-center justify-center"><span><i

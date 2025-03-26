@@ -98,7 +98,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('courses_content', function (Blueprint $table) {
+        Schema::create('courses_contents', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);
             $table->unsignedBigInteger('courses_id');
@@ -110,9 +110,9 @@ return new class extends Migration
         Schema::create('courses_content_items', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('courses_content_id');
-            $table->foreign('courses_content_id')->references('id')->on('courses_content');
+            $table->foreign('courses_content_id')->references('id')->on('courses_contents');
             $table->enum('content_type', ['video', 'quiz']);
-            $table->unsignedBigInteger('content_id'); // ID chung cho cả video và quiz
+            $table->unsignedBigInteger('content_id');
             $table->tinyInteger('status');
             $table->timestamps();
         });

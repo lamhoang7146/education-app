@@ -25,3 +25,5 @@ require_once __DIR__ . '/coursesManagementCourses.php';
 require_once __DIR__ . '/coursesManagementVideo.php';
 require_once __DIR__ . '/coursesManagementQuiz.php';
 require_once __DIR__ . '/coursesManagementQuizDetail.php';
+require_once __DIR__ . '/coursesManagementCoursesContent.php';
+require_once __DIR__ . '/coursesManagementCoursesContentItem.php';
