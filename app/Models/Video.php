@@ -12,4 +12,8 @@ class Video extends Model
         'youtube_id',
         'status'
     ];
+    public function contentItem()
+    {
+        return $this->morphOne(CoursesContentItem::class, 'content');
+    }
 }

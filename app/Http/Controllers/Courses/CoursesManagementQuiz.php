@@ -9,22 +9,18 @@ use Inertia\Inertia;
 
 class CoursesManagementQuiz extends Controller
 {
-    private array $data = [];
-
-    public function quiz()
-    {
-        $this->data['quizzes'] = Quiz::select('*')->latest()->paginate(9);
-        return Inertia::render('CoursesManagementQuiz/Quiz', [
-            ...$this->data,
-            'message' => session('message'),
-            'status' => session('status')
-        ]);
-    }
-
     public function store($courses_id,$content_item_id)
     {
         $credentials = request()->validate([
-            'name' => ['required','string','max:255','min:3'],
+            'name' => ['required','string','max:255','min:3',function ($attribute, $value, $fail) use ($content_item_id) {
+                if (Quiz::whereIn('id', CoursesContentItem::where('courses_content_id', $content_item_id)
+                    ->where('content_type', 'quiz')
+                    ->pluck('content_id'))
+                    ->where('name', $value)
+                    ->exists()) {
+                    $fail("Quiz name '{$value}' already exists for this content item.");
+                }
+            }],
             'status' => 'required',
         ]);
         $quiz = Quiz::create([
@@ -43,19 +39,34 @@ class CoursesManagementQuiz extends Controller
         ]);
     }
 
-    public function update(Quiz $quiz)
+    public function update(Quiz $quiz, $content_item_id)
     {
         $credentials = request()->validate([
-            'name' => ['required','string','max:255','min:3'],
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                'min:3',
+                function ($attribute, $value, $fail) use ($content_item_id, $quiz) {
+                    $quizIds = CoursesContentItem::where('courses_content_id', $content_item_id)
+                        ->where('content_type', 'quiz')
+                        ->pluck('content_id');
+                    if (Quiz::whereIn('id', $quizIds)
+                        ->where('name', $value)
+                        ->where('id', '!=', $quiz->id)
+                        ->exists()) {
+                        $fail("Quiz name '{$value}' already exists for this content item.");
+                    }
+                }
+            ],
             'status' => 'required',
         ]);
-        $quiz_name = $credentials['name'];
         $quiz->update([
-            'name'=>$credentials['name'],
-            'status'=>$credentials['status'],
+            'name' => $credentials['name'],
+            'status' => $credentials['status'],
         ]);
         return back()->with([
-            'message' => "Quiz $quiz_name updated successfully",
+            'message' => "Quiz '{$credentials['name']}' updated successfully",
             'status' => true
         ]);
     }

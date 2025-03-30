@@ -43,22 +43,93 @@ class CoursesManagementQuizDetail extends Controller
                 })
             ],
             'answers' => ['required', 'string', function ($attribute, $value, $fail) {
-                $answers = array_unique(array_filter(array_map('trim', explode(',', $value))));
-                if (count($answers) !== 4) {
-                    $fail('The answers field must contain exactly 4 unique values.');
+                // Split answers by tilde (~) instead of comma
+                $answers = array_unique(array_filter(array_map('trim', explode('~', $value))));
+                if (count($answers) < 2 || count($answers) > 4) {
+                    $fail('The answers field must contain between 2 and 4 unique values.');
                 }
             }],
             'result' => ['required', 'string', function ($attribute, $value, $fail) {
-                $answers = array_unique(array_filter(array_map('trim', explode(',', request()->input('answers', '')))));
+                // Split answers by tilde (~) instead of comma
+                $answers = array_unique(array_filter(array_map('trim', explode('~', request()->input('answers', '')))));
                 if (!in_array($value, $answers)) {
                     $fail('The result must be one of the answers.');
                 }
             }],
             'quiz_id' => ['required', 'integer'],
         ]);
+
         Quiz_content_detail::create($quiz_detail);
         return back()->with(['message' => "Quiz {$quiz_detail["question"]} Added Successfully",'status' => true]);
     }
+    public function generateWithAI(Request $request)
+    {
+        // Validate the request
+        $validated = $request->validate([
+            'topic' => 'required|string|min:3|max:255',
+            'numberOfQuestions' => 'required|integer|min:1|max:20',
+            'answersPerQuestion' => 'required|integer|min:2|max:4',
+            'difficultyLevel' => 'required|string|in:Easy,Medium,Hard',
+            'quiz_id' => 'required|integer|exists:quizzes,id',
+        ]);
+
+        // Process AI-generated questions (from request - we'll assume frontend sends the generated questions)
+        $generatedQuestions = $request->input('generatedQuestions');
+
+        if (!$generatedQuestions || !is_array($generatedQuestions)) {
+            return back()->with([
+                'message' => 'No questions were generated or invalid question format',
+                'status' => false
+            ]);
+        }
+
+        $successCount = 0;
+        $errors = [];
+
+        // Process each question and save to database
+        foreach ($generatedQuestions as $question) {
+            try {
+                // Format answers to the expected tilde-separated string
+                $answers = implode('~', $question['answers']);
+                $result = $question['correctAnswer'];
+
+                // Check if question already exists for this quiz
+                $existingQuestion = Quiz_content_detail::where('quiz_id', $validated['quiz_id'])
+                    ->where('question', $question['question'])
+                    ->first();
+
+                if ($existingQuestion) {
+                    $errors[] = "Question '{$question['question']}' already exists for this quiz";
+                    continue;
+                }
+
+                // Create the quiz question
+                Quiz_content_detail::create([
+                    'quiz_id' => $validated['quiz_id'],
+                    'question' => $question['question'],
+                    'answers' => $answers,
+                    'result' => $result
+                ]);
+
+                $successCount++;
+            } catch (\Exception $e) {
+                $errors[] = "Error adding question '{$question['question']}': " . $e->getMessage();
+            }
+        }
+
+        $message = $successCount > 0
+            ? "Successfully added {$successCount} AI-generated questions"
+            : "Failed to add any questions";
+
+        if (count($errors) > 0) {
+            $message .= " with " . count($errors) . " errors";
+        }
+
+        return back()->with('message', $message)
+            ->with('status', $successCount > 0)
+            ->with('error', implode(', ', $errors));
+    }
+
     public function update(){
         $quizDetail = Quiz_content_detail::findOrFail(request()->id);
 
@@ -77,13 +148,15 @@ class CoursesManagementQuizDetail extends Controller
                     ->ignore($quizDetail->id),
             ],
             'answers' => ['required', 'string', function ($attribute, $value, $fail) {
-                $answers = array_unique(array_filter(array_map('trim', explode(',', $value))));
-                if (count($answers) !== 4) {
-                    $fail('The answers field must contain exactly 4 unique values.');
+                // Split answers by tilde (~) instead of comma
+                $answers = array_unique(array_filter(array_map('trim', explode('~', $value))));
+                if (count($answers) < 2 || count($answers) > 4) {
+                    $fail('The answers field must contain between 2 and 4 unique values.');
                 }
             }],
             'result' => ['required', 'string', function ($attribute, $value, $fail) {
-                $answers = array_unique(array_filter(array_map('trim', explode(',', request()->input('answers', '')))));
+                // Split answers by tilde (~) instead of comma
+                $answers = array_unique(array_filter(array_map('trim', explode('~', request()->input('answers', '')))));
                 if (!in_array($value, $answers)) {
                     $fail('The result must be one of the answers.');
                 }
@@ -95,6 +168,7 @@ class CoursesManagementQuizDetail extends Controller
 
         return back()->with(['message' => "Quiz {$validatedData["question"]} Updated Successfully", 'status' => true]);
     }
+
     public function destroy(Quiz_content_detail $id){
         $id->delete();
         return back()->with(['message' => "Quiz {$id->question} Deleted Successfully", 'status' => true]);
