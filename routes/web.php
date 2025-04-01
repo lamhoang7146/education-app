@@ -1,19 +1,24 @@
 <?php
 
+use App\Http\Controllers\YoutubeOauthController;
+use App\Http\Controllers\YoutubeUploadController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
-use App\Http\Controllers\YouTubeController;
 
 Route::get('/', function () {
     return Inertia::render('Home');
 })->name('home');
 
-Route::get('/upload-video-form', function () {
-    return Inertia::render('UploadVideo/UploadVideo');
-})->name('upload-video-form');
+Route::get('/youtube/access-token', [YoutubeOauthController::class, 'getAccessToken']);
+Route::post('/youtube/update-token', [YoutubeOauthController::class, 'updateAccessToken']);
+Route::get('/youtube/authenticate', [YoutubeOauthController::class, 'authenticate']);
+Route::get('/youtube/callback', [YoutubeOauthController::class, 'callback']);
+Route::get('/youtube/upload', [YoutubeUploadController::class, 'showUploadForm']);
+Route::post('/youtube/upload', [YoutubeUploadController::class, 'uploadVideo'])->name('youtube.upload');
 
-Route::post('/api/upload-video', [YouTubeController::class, 'uploadVideo'])->name('api.upload-video');
-Route::get('/oauth2callback', [YouTubeController::class, 'oauth2callback'])->name('oauth2callback');
+Route::get('/youtube/upload-form', function () {
+    return Inertia::render('Youtube/Upload');
+})->name('youtube.upload-form');
 
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/courses.php';
