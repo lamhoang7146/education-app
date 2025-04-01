@@ -99,16 +99,11 @@ const component = computed(() => usePage().component)
                 </Link>
             </SidebarSubmenuLink>
             <Link
-                :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'UploadVideoForm'}"
+                :href="route('youtube.upload-form')"
                 @click="emit('emitSidebar')"
-                :href="route('upload-video-form')"
-                class=" flex justify-between items-center pl-4 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
-                <div class="flex items-center ">
-                    <div class="mr-3">
-                        <i class="fa-solid fa-upload"></i>
-                    </div>
-                    <p>Upload Video</p>
-                </div>
+                :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Youtube/Upload'}"
+                class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
+                <span class="-translate-y-[2px]"><i class="fa-solid fa-upload text-xs mr-2"></i></span>Upload Video
             </Link>
         </ul>
     </div>
