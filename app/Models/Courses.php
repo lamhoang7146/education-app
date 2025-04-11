@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Courses extends Model
 {
@@ -17,11 +18,19 @@ class Courses extends Model
         'level',
         'status'
     ];
+    public function getCreatedAtAttribute($value)
+    {
+        return Carbon::parse($value)->format('d/m/Y'); // Format dd/mm/yyyy
+    }
     public function user(){
         return $this->belongsTo(User::class);
     }
     public function categoryCourses(){
         return $this->belongsTo(Category_courses::class);
+    }
+    public function coursesContents()
+    {
+        return $this->hasMany(CoursesContent::class, 'courses_id');
     }
     public function scopeFilter($query, array $categoryCoursesId)
     {

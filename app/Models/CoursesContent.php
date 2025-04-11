@@ -11,6 +11,10 @@ class CoursesContent extends Model
       'status',
       'courses_id'
     ];
+    public function courses()
+    {
+        return $this->belongsTo(Courses::class, 'courses_id');
+    }
     public function contentItems()
     {
         return $this->hasMany(CoursesContentItem::class, 'courses_content_id');

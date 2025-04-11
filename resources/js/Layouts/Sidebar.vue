@@ -60,13 +60,7 @@ const component = computed(() => usePage().component)
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Courses
                 </Link>
-                <Link
-                    :href="route('courses.management.video')"
-                    @click="emit('emitSidebar')"
-                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagementVideo/Video'}"
-                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Video
-                </Link>
+
             </SidebarSubmenuLink>
             <SidebarSubmenuLink icon="fa-user" name="Users" reference="User" :component="component">
                 <Link
@@ -91,13 +85,6 @@ const component = computed(() => usePage().component)
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
-            <Link
-                :href="route('youtube.upload-form')"
-                @click="emit('emitSidebar')"
-                :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Youtube/Upload'}"
-                class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                <span class="-translate-y-[2px]"><i class="fa-solid fa-upload text-xs mr-2"></i></span>Upload Video
-            </Link>
         </ul>
     </div>
 </template>

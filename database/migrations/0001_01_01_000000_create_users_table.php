@@ -91,7 +91,7 @@ return new class extends Migration
 
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
-            $table->string('youtube_id', 255);
+            $table->string('google_drive_id', 255);
             $table->string('title', 255);
             $table->text('description');
             $table->tinyInteger('status');
@@ -114,6 +114,14 @@ return new class extends Migration
             $table->enum('content_type', ['video', 'quiz']);
             $table->unsignedBigInteger('content_id');
             $table->tinyInteger('status');
+            $table->timestamps();
+        });
+
+        Schema::create('google_drive_tokens', function (Blueprint $table) {
+            $table->id();
+            $table->text('access_token');
+            $table->text('refresh_token')->nullable();
+            $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
 

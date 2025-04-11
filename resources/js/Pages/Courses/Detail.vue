@@ -5,7 +5,19 @@ import {ref} from "vue";
 import CoursesContent from "../../Components/CoursesContent.vue";
 import {vAutoAnimate} from "@formkit/auto-animate";
 import {TabGroup, TabList, Tab, TabPanels, TabPanel} from '@headlessui/vue'
-
+const props = defineProps({
+    courses_detail: {
+        type: Object,
+        required: true
+    },
+    content_count: {
+        type: Number,
+        required: true
+    }
+});
+console.log(props.courses_detail)
+// Course data
+const course = props.courses_detail;
 function calculateFinalPrice(price, voucher) {
     const discountPercentage = parseFloat(voucher) / 100;
 
@@ -29,12 +41,11 @@ const categories = ref([
         type: 'Courses contents',
     }
 ])
-const test = ref(false)
+
 </script>
 <template>
-    <div class="flex gap-x-5">
-
-        <div class="w-2/3">
+    <div class="grid grid-cols-[2fr_1fr] gap-x-5 w-full">
+        <div class="">
             <Container class="p-1">
                 <div>
                     <TabGroup>
@@ -46,81 +57,89 @@ const test = ref(false)
                                 </div>
                             </Tab>
                         </TabList>
-                        <tab-panels class="max-h-[500px] overflow-y-auto main mt-4 overflow-x-hidden">
-                            <div v-auto-animate>
-                                <tab-panel>
-                                    <h1>About</h1>
-                                </tab-panel>
-                            </div>
-                            <div v-auto-animate>
-                                <tab-panel >
-                                    <div class="overflow-hidden rounded-md border-[1px] border-gray-200 dark:border-opacity-20">
-                                        <CoursesContent v-for="know in 4">
+                        <TabPanels v-auto-animate class="max-h-[500px] overflow-y-auto main mt-4 overflow-x-hidden">
+                            <transition name="fade" mode="out-in">
+                                <TabPanel key="desc">
+                                    <div class="tiptap pr-2" v-html="courses_detail.description"></div>
+                                </TabPanel>
+                            </transition>
 
-                                        </CoursesContent>
+                            <transition name="fade" mode="out-in">
+                                <TabPanel key="content">
+                                    <div v-if="course.courses_contents.length > 0" class="overflow-hidden rounded-md border-[1px] border-gray-200 dark:border-opacity-20">
+                                        <CoursesContent
+                                            v-for="content in course?.courses_contents"
+                                            :key="content.id"
+                                            :content="content"
+                                        />
                                     </div>
-
-                                </tab-panel>
-                            </div>
-                        </tab-panels>
+                                    <div v-else>
+                                        <h1>Don't have courses content!</h1>
+                                    </div>
+                                </TabPanel>
+                            </transition>
+                        </TabPanels>
                     </TabGroup>
                 </div>
-                <div class="max-h-[620px] overflow-y-auto main">
-                    <div class="">
 
-                    </div>
-                </div>
 
             </Container>
         </div>
-
-
-        <div class="w-1/3">
+        <div class="">
             <Container>
                 <div>
                     <div>
                         <img class="h-48 w-full rounded-md object-cover"
-                             src="../../../../public/storage/courses/default.jpg" alt="">
+                             :src="`/storage/${course.thumbnail}`" alt="">
                     </div>
                     <div class="mt-4">
-                        <h1 class="font-medium leading-6 text-base mb-2">Build fullstack app using Vuejs and Laravel
-                            combination with the mysql and python</h1>
+                        <h1 class="font-medium leading-6 text-base mb-2">{{courses_detail.title}}</h1>
                         <div class="grid grid-cols-2">
                             <div>
                                 <span class="text-sm">Level:</span>
-                                <span class="text-sm font-medium"> Easy</span>
+                                <span class="text-sm font-medium">{{` ${courses_detail.level}`}}</span>
                             </div>
                             <div>
                                 <span class="text-sm">Modules:</span>
-                                <span class="text-sm font-medium"> 6</span>
+                                <span class="text-sm font-medium"> {{` ${course.courses_contents.length}`}}</span>
                             </div>
                         </div>
                         <div class="grid grid-cols-2">
                             <div>
                                 <span class="text-sm ">Lecturers:</span>
-                                <span class="text-sm font-medium"> 20</span>
+                                <span class="text-sm font-medium">{{` ${course.user.name}`}}</span>
                             </div>
                             <div>
-                                <span class="text-sm">Quiz's:</span>
-                                <span class="text-sm font-medium"> 12</span>
+                                <span class="text-sm">Created at:</span>
+                                <span class="text-sm font-medium"> {{` ${course.created_at}`}}</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
-                    <div class="space-x-2">
-                        <span class="line-through text-gray-500 text-sm">{{ formatCurrency(1300000) }}</span>
+                    <div v-if="!course.is_free" class="space-x-2">
+                        <span class="line-through text-gray-500 text-sm">{{ formatCurrency(parseInt(course.price)) }}</span>
                         <span
                             class="text-[#7367F0] font-medium text-base">{{
-                                formatCurrency(calculateFinalPrice(1300000, 10))
+                                formatCurrency(calculateFinalPrice(parseInt(course.price), 10))
                             }}</span>
                     </div>
                 </div>
-                <div class="mt-2">
-                    <Link :href="route('courses.learning',{id:1})" v-if="true" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Buy Now</Link>
-                    <Button v-else>Learn courses</Button>
+                <div  class="mt-2">
+                    <Link :href="route('courses.learning',{id:1})" v-if="!course.is_free" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Buy Now</Link>
+                    <Link :href="route('courses.learning',{id:1})" v-else class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Learn Now</Link>
+
                 </div>
             </Container>
         </div>
     </div>
 </template>
+
+<style scoped>
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.2s ease-in-out;
+}
+.fade-enter-from, .fade-leave-to {
+    opacity: 0;
+}
+</style>

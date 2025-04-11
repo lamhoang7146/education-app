@@ -16,7 +16,8 @@
         "laravel/socialite": "^5.17",
         "laravel/tinker": "^2.9",
         "predis/predis": "^2.3",
-        "tightenco/ziggy": "^2.4"
+        "tightenco/ziggy": "^2.4",
+        "ext-fileinfo": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

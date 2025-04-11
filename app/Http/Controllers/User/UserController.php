@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
+use App\Http\Controllers\Controller;
 use App\Models\Role;
 use App\Models\User;
 use Illuminate\Support\Facades\Storage;
-//use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 use Predis\Client as Redis;
+
+//use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {

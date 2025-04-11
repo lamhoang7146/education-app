@@ -12,8 +12,9 @@ class Video extends Model
         'youtube_id',
         'status'
     ];
-    public function contentItem()
+    // Define relationship to course content items
+    public function contentItems()
     {
-        return $this->morphOne(CoursesContentItem::class, 'content');
+        return $this->morphMany(CoursesContentItem::class, 'content', 'content_type', 'content_id');
     }
 }

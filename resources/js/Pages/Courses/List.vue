@@ -1,44 +1,23 @@
 <script setup>
 import Container from "../../Components/Container.vue";
 import {Listbox, ListboxButton, ListboxOption, ListboxOptions} from "@headlessui/vue";
-import {ref} from "vue";
+import {ref, watch} from "vue";
 import {route} from "ziggy-js";
+import {router} from "@inertiajs/vue3";
+import PaginationLinks from "../../Components/PaginationLinks.vue";
+const props = defineProps({
+    courses:Object,
+    category_courses:Object
+})
+const params = route().params;
 
-const data = ref([
-    {
-        title: "Basics of Angular",
-        des: "Introductory course for Angular and framework basics.Master Angular and build awesome apps.",
-        total_videos: 5,
-        tags: ['Education', 'Coding', 'Learning'],
-        price: 1299000,
-        voucher: 10
-    },
-    {
-        title: "Advanced React",
-        des: "Deep dive into React and state management. Build complex applications with ease.",
-        total_videos: 8,
-        tags: ["Web Development", "React", "JavaScript"],
-        price: 1500000,
-        voucher: 15
-    },
-    {
-        title: "Python for Data Science",
-        des: "Learn Python programming for data analysis and visualization. Perfect for beginners.",
-        total_videos: 6,
-        tags: ["Data Science", "Python", "Analytics"],
-        price: 1200000,
-        voucher: 20
-    },
-    {
-        title: "Introduction to Machine Learning",
-        des: "Understand the basics of machine learning and algorithms. Start your AI journey here.",
-        total_videos: 7,
-        tags: ["AI", "Machine Learning", "Technology"],
-        price: 1800000,
-        voucher: 5
-    }
-])
-
+let selectedCategory = ref(props.category_courses.find(item=> item.id === parseInt(params.category_courses_id)));
+const categoryCoursesParams = ref([{id:null,name:'Select category'},...props.category_courses]);
+watch(selectedCategory, (newCategory) => {
+    router.get(route('courses.index'), {
+        category_courses_id: newCategory ? newCategory.id : null,
+    })
+})
 function calculateFinalPrice(price, voucher) {
     const discountPercentage = parseFloat(voucher) / 100;
 
@@ -54,43 +33,6 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-const levels = ref([
-    {
-        level: "Selected all level"
-    },
-    {
-        level: "Easy"
-    },
-    {
-        level: "Medium"
-    },
-    {
-        level: "Hard"
-    },
-    {
-        level: "Extremely"
-    },
-]);
-const categories = ref([
-    {
-        category: "Selected all categories"
-    },
-    {
-        category: "Education"
-    },
-    {
-        category: "Programming"
-    },
-    {
-        category: "Machine Learning"
-    },
-    {
-        category: "Artificial Intelligence"
-    },
-])
-const selectedLevel = ref(levels.value[0])
-const selectedCategory = ref(categories.value[0])
-const search = ref("")
 </script>
 <template>
     <Container class="grid grid-cols-2 gap-x-4">
@@ -100,93 +42,85 @@ const search = ref("")
                        class="py-2 w-full outline-0 border-[1px] order-gray-200 rounded-md px-4 placeholder:text-primary placeholder:dark:dark-text-primary bg-transparent"
                        type="text" placeholder="Search courses...">
             </div>
-            <Listbox v-model="selectedLevel">
-                <div class="relative">
-                    <ListboxButton
-                        class="border-[1px] border-gray-200 rounded-md py-2 px-4 text-left w-full flex justify-between">
-                        {{ selectedLevel?.level || 'Select level' }}
-                        <span><i class="fa-solid fa-angle-down"></i></span>
-                    </ListboxButton>
-                    <transition name="list">
-                        <ListboxOptions
-                            class="absolute top-[120%] bg-behind dark:dark-bg-behind rounded-md p-2 box-shadow-copy w-full">
-                            <ListboxOption
-                                class="cursor-pointer p-2 text-sm hover:hover-selected dark:hover:dark-hover-selected transition rounded-md"
-                                v-for="level in levels"
-                                :key="level.level"
-                                :value="level"
-                            >
-                                {{ level.level }}
-                            </ListboxOption>
-                        </ListboxOptions>
-                    </transition>
-                </div>
-            </Listbox>
-        </div>
-        <div class="grid grid-cols-2 gap-x-4">
-            <Listbox v-model="selectedCategory">
-                <div class="relative">
-                    <ListboxButton
-                        class="border-[1px] border-gray-200 rounded-md py-2 px-4 text-left w-full flex justify-between">
-                        {{ selectedCategory?.category || 'Select level' }}
-                        <span><i class="fa-solid fa-angle-down"></i></span>
-                    </ListboxButton>
-                    <transition name="list">
-                        <ListboxOptions
-                            class="absolute top-[120%] bg-behind dark:dark-bg-behind rounded-md p-2 box-shadow-copy w-full">
-                            <ListboxOption
-                                class="cursor-pointer p-2 text-sm hover:hover-selected dark:hover:dark-hover-selected transition rounded-md"
-                                v-for="category in categories"
-                                :key="category.category"
-                                :value="category"
-                            >
-                                {{ category.category }}
-                            </ListboxOption>
-                        </ListboxOptions>
-                    </transition>
-                </div>
-            </Listbox>
-        </div>
-        <div>
-
+            <div>
+                <Listbox v-model="selectedCategory">
+                    <div class="relative">
+                        <ListboxButton class="border-[1px] border-gray-200 rounded-md py-2 px-4 text-left min-w-40 text-sm">
+                            {{ selectedCategory?.name || 'Select category' }}
+                        </ListboxButton>
+                        <transition name="list">
+                            <ListboxOptions
+                                class="absolute top-[120%] bg-behind dark:dark-bg-behind rounded-md p-2 box-shadow-copy w-full z-30">
+                                <ListboxOption
+                                    class="cursor-pointer p-2 text-sm hover:hover-selected dark:hover:dark-hover-selected transition rounded-md"
+                                    v-for="item in categoryCoursesParams"
+                                    :key="item.id"
+                                    :value="item">
+                                    {{ item.name }}
+                                </ListboxOption>
+                            </ListboxOptions>
+                        </transition>
+                    </div>
+                </Listbox>
+            </div>
         </div>
     </Container>
-    <div class="mt-6 grid grid-cols-4 gap-x-4 gap-y-4">
-            <Link :href="route('courses.detail',{id:1})" class="bg-content dark:dark-bg-content rounded-md box-shadow-copy" v-for="item in data">
-            <div class="h-44">
-                <img class="size-full rounded-tl-md rounded-tr-md" src="../../../../public/storage/courses/default.jpg"
-                     alt="">
+    <div class="grid grid-cols-4 gap-x-5 gap-y-5 mt-6 ">
+        <Link :href="route('courses.detail',{id:item.id})" class="rounded-md overflow-hidden box-shadow-copy" v-for="item in courses.data">
+            <div class="relative">
+                <img class="h-40 object-cover w-full" :src="`/storage/${item.thumbnail}`" alt="">
+                <div class="text-xs absolute left-4 top-3 bg-gray-200 py-1 px-3 text-black font-medium rounded-full">{{ item.category_courses.name }}</div>
+                <div class="text-xs absolute top-4 right-4">
+                                            <span v-if="item.level.includes('Easy')"
+                                                  class="bg-green-100 py-1 px-3 rounded-full text-green-500  font-medium">Easy</span>
+                    <span v-if="item.level.includes('Medium')"
+                          class="bg-yellow-100 py-1 px-3 rounded-full text-yellow-500  font-medium">Medium</span>
+                    <span v-if="item.level.includes('Hard')"
+                          class="bg-red-100 py-1 px-3 rounded-full text-red-500  font-medium">Hard</span>
+                    <span v-if="item.level.includes('Extremely')"
+                          class="bg-purple-100 py-1 px-3 rounded-full text-purple-500  font-medium">Extremely</span>
+                </div>
             </div>
-            <div class="px-4 pt-3 pb-2">
-                <span class="bg-green-200 px-2 pb-1 text-green-500 bg-opacity-40 font-medium">Easy</span>
-                <h1 class="mb-1 mt-2 font-medium text-[18px] line-clamp-1">{{ item.title }}</h1>
+            <div class="p-6 bg-content dark:dark-bg-content ">
                 <div class="flex items-center justify-between">
-                    <div class="space-x-2">
-                        <span class="line-through text-gray-500 text-sm">{{ formatCurrency(item.price) }}</span>
+                    <div class="text-xs">
+                        <span class=" px-3 py-1 font-medium  rounded-md bg-green-100 text-green-500"
+                              v-if="item.status">Active</span>
+                        <span class=" px-3 py-1 rounded-md bg-red-100 text-red-500" v-else>Suspended</span>
+                    </div>
+                    <div class="text-sm">
                         <span
-                            class="text-[#7367F0] font-medium text-base">{{
-                                formatCurrency(calculateFinalPrice(item.price, item.voucher))
+                            v-if="!item.is_free"
+                            class="text-[#7367F0] font-medium">{{
+                                formatCurrency(item.price)
                             }}</span>
+                        <span v-else class="text-[#7367F0] font-medium">Free</span>
                     </div>
                 </div>
-                <div class="flex items-center my-2 justify-between">
-                    <div>
-                        <span class="mr-1 translate-y-[.3px]"><i class="fa-solid fa-book text-sm"></i></span>
-                        {{ item.total_videos }}
+                <h1 class="mt-3 mb-1 font-medium text-sm line-clamp-2 h-12">{{ item.title }}</h1>
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-x-2">
+                        <div>
+                            <img class="h-8 w-8 object-center rounded-full"
+                                 :src="item.user.image ? `/storage/${item.user.image}` : '/storage/default.webp'" alt="">
+                        </div>
+                        <div class="flex flex-col justify-center">
+                            <h1 class="text-sm font-medium">{{ item.user.name }}</h1>
+                            <p>{{ item.user.email }}</p>
+                        </div>
                     </div>
-                    <div>
-                        <span class="mr-1 translate-y-[.3px]"><i class="fa-solid fa-user text-sm"></i></span>Lam Hoang
-                    </div>
-                    <div>
-                        <span class="mr-1 translate-y-[.3px]"><i class="fa-solid fa-calendar-days text-sm"></i></span>21/2/2025
+                    <div class="text-sm flex items-center gap-x-2">
+                        <i class="fa-regular fa-clock text-sm"></i>
+                        <span class="-translate-y-[.5px]">
+                            {{ item?.created_at }}
+                        </span>
                     </div>
                 </div>
-
             </div>
-
-
         </Link>
     </div>
+    <PaginationLinks class="my-4" :paginator="courses" />
+
 </template>
 <style scoped>
 .list-enter-from, .list-leave-to {

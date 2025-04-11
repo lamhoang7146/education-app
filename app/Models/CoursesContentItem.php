@@ -14,12 +14,20 @@ class CoursesContentItem extends Model
     ];
     public function content()
     {
-        // Make sure the morph map is using the correct case
         return $this->morphTo('content', 'content_type', 'content_id');
     }
 
     public function coursesContent()
     {
         return $this->belongsTo(CoursesContent::class, 'courses_content_id');
+    }
+    public function video()
+    {
+        return $this->belongsTo(Video::class, 'content_id')->where('content_type', 'video');
+    }
+
+    public function quiz()
+    {
+        return $this->belongsTo(Quiz::class, 'content_id')->where('content_type', 'quiz');
     }
 }
