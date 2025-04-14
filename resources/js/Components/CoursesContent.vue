@@ -32,7 +32,7 @@ const handleRequest = (id,type,content_id)=>{
 </script>
 
 <template>
-    <div>
+    <div class="border-[1px] border-gray-200 overflow-hidden rounded-md dark:border-opacity-20">
         <button
             @click="isOpen = !isOpen"
             class="hover-selected dark:dark-hover-selected px-4 py-2 w-full flex items-center justify-between border-b-[1px] border-gray-200 dark:border-opacity-20"
@@ -50,7 +50,7 @@ const handleRequest = (id,type,content_id)=>{
                     :key="index"
                     @click="handleRequest(content.courses_id,item.content_type,item.content_id)"
                     class="border-b-[1px] border-gray-200 py-2 px-4 flex items-center justify-between dark:border-opacity-20 cursor-pointer"
-                    :class="{'bg-slate-300':params.type === item.content_type && parseInt(params.content_id) === parseInt(item.content_id)}"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':params.type === item.content_type && parseInt(params.content_id) === parseInt(item.content_id)}"
                 >
 
                         <span>

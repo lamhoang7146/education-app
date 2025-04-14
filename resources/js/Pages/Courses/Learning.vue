@@ -23,7 +23,7 @@ import Quiz from "./Quiz.vue";
             </div>
         </div>
         <Container class="grid row-span-1">
-            <div class="overflow-hidden rounded-md border-[1px] border-gray-200 dark:border-opacity-20">
+            <div>
                 <CoursesContent
                     v-for="content in courses_detail?.courses_contents"
                     :key="content.id"

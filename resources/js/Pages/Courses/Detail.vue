@@ -65,7 +65,7 @@ const categories = ref([
 
                             <transition name="fade" mode="out-in">
                                 <TabPanel key="content">
-                                    <div v-if="course.courses_contents.length > 0" class="overflow-hidden rounded-md border-[1px] border-gray-200 dark:border-opacity-20">
+                                    <div v-if="course.courses_contents.length > 0">
                                         <CoursesContent
                                             v-for="content in course?.courses_contents"
                                             :key="content.id"
