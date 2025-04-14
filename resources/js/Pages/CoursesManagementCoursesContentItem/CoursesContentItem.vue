@@ -7,6 +7,7 @@ import {ref, watch} from "vue";
 import {useForm} from "@inertiajs/vue3";
 import Button from "../../Components/Button.vue";
 import {route} from "ziggy-js";
+import Tiptap from "../../Components/Tiptap.vue";
 
 const props = defineProps({
     courses_id: Number,
@@ -50,7 +51,7 @@ watch(statusAddVideo, (value) => {
 })
 
 const formAddVideo = useForm({
-    title: null,
+    name: null,
     description: null,
     status: statusAddVideo.value,
     file: null
@@ -141,20 +142,18 @@ const handleAddVideo = () => {
                         <h1 class="text-lg font-medium mb-2">Add video</h1>
                         <form @submit.prevent="handleAddVideo" class="w-1/2 grid gap-y-4">
                             <InputField
-                                v-model="formAddVideo.title"
-                                label="Video Title"
+                                v-model="formAddVideo.name"
+                                label="Video name"
                                 type="text"
-                                placeholder="Enter video title"
-                                :error="formAddVideo.errors.title"
+                                placeholder="Enter video name"
+                                :error="formAddVideo.errors.name"
                             />
                             <div class="grid gap-y-1">
                                 <label class="text-sm font-medium">Description</label>
-                                <textarea
-                                    v-model="formAddVideo.description"
-                                    class="border-[1px] border-slate-300 rounded-md p-2 text-sm"
-                                    placeholder="Enter video description"
-                                    rows="3"
-                                ></textarea>
+                                <Tiptap
+                                v-model="formAddVideo.description"
+                                :error="formAddVideo.errors.description"
+                                />
                                 <p v-if="formAddVideo.errors.description" class="text-red-500 text-xs mt-1">
                                     {{ formAddVideo.errors.description }}
                                 </p>

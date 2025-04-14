@@ -9,6 +9,7 @@ use App\Services\GoogleDriveOauthService;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Log;
 use Inertia\Inertia;
 
 class VideoController extends Controller
@@ -25,12 +26,12 @@ class VideoController extends Controller
      */
     public function authenticate(Request $request)
     {
-        // Lưu URL trả về trong session để chuyển hướng sau khi xác thực
+        // Save return URL in session for redirection after authentication
         if ($request->has('return_url')) {
             Session::put('google_auth_return_url', $request->input('return_url'));
         }
 
-        // Lưu ID khóa học và ID mục nội dung nếu có
+        // Save course ID and content item ID if provided
         if ($request->has('courses_id')) {
             Session::put('google_auth_courses_id', $request->input('courses_id'));
         }
@@ -41,6 +42,7 @@ class VideoController extends Controller
 
         return redirect($this->googleDriveService->getAuthUrl());
     }
+
     /**
      * Handle Google OAuth callback
      */
@@ -56,7 +58,7 @@ class VideoController extends Controller
         try {
             $this->googleDriveService->authenticate($code);
 
-            // Nếu có content_item_id và courses_id trong session, chuyển hướng đến resumeUpload
+            // If content_item_id and courses_id exist in session, redirect to resumeUpload
             if (Session::has('google_auth_courses_id') && Session::has('google_auth_content_item_id')) {
                 $coursesId = Session::get('google_auth_courses_id');
                 $contentItemId = Session::get('google_auth_content_item_id');
@@ -67,13 +69,11 @@ class VideoController extends Controller
                 ]);
             }
 
-            // Nếu có return_url trong session
             if (Session::has('google_auth_return_url')) {
                 $returnUrl = Session::pull('google_auth_return_url');
                 return redirect($returnUrl)->with('success', 'Google Drive authentication successful!');
             }
 
-            // Mặc định
             return redirect()->route('courses.management.courses.index')
                 ->with('success', 'Google Drive authentication successful!');
         } catch (Exception $e) {
@@ -81,8 +81,9 @@ class VideoController extends Controller
                 ->with('error', 'Failed to authenticate with Google Drive: ' . $e->getMessage());
         }
     }
+
     /**
-     * Show add video form (if needed)
+     * Show add video form
      */
     public function addForm($courses_id, $content_item_id): \Inertia\Response
     {
@@ -102,18 +103,18 @@ class VideoController extends Controller
     public function addVideo(Request $request, $courses_id, $content_item_id)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'required|string',
             'status' => 'required|boolean',
-            'file' => 'required|file|mimes:mp4,mov,avi,wmv|max:102400', // Limit: 100MB
+            'file' => 'required|file|mimes:mp4,mov,avi,wmv|max:102400',
         ]);
 
-        // Kiểm tra xác thực Google Drive
+        // Check Google Drive authentication
         if (!$this->googleDriveService->isAuthenticated()) {
-            // Lưu dữ liệu form trong session
+            // Save form data in session
             $uploadData = $request->except('file');
 
-            // Lưu thông tin về file tạm thời
+            // Save temporary file information
             if ($request->hasFile('file')) {
                 $file = $request->file('file');
                 $tempPath = $file->getPathname();
@@ -121,7 +122,7 @@ class VideoController extends Controller
                 $mimeType = $file->getMimeType();
                 $size = $file->getSize();
 
-                // Lưu thông tin về file
+                // Save file information
                 $uploadData['file'] = [
                     'temp_path' => $tempPath,
                     'original_name' => $originalName,
@@ -132,7 +133,7 @@ class VideoController extends Controller
 
             Session::put('video_upload_data', $uploadData);
 
-            // Chuyển hướng tới xác thực
+            // Redirect to authentication
             return redirect()->route('google-drive.authenticate', [
                 'return_url' => route('courses.management.video.resume-upload', [
                     'courses_id' => $courses_id,
@@ -144,25 +145,25 @@ class VideoController extends Controller
         }
 
         try {
-            // Code tải lên video
+            // Upload video process
             $filePath = $request->file('file')->getPathname();
-            $fileName = $request->input('title') . '.' . $request->file('file')->getClientOriginalExtension();
+            $fileName = $request->input('name') . '.' . $request->file('file')->getClientOriginalExtension();
 
-            // Sử dụng ID folder mặc định
-            $folderId = '1RXcqFOJacEYTSQKrfBvl-HsZ6gfGwLR8';
+            // Get storage folder ID from environment variable
+            $folderId = $this->googleDriveService->getStorageFolderId();
 
-            // Tải file lên
+            // Upload file
             $uploadedFile = $this->googleDriveService->uploadFile($filePath, $fileName, $folderId);
 
-            // Tạo bản ghi video trong cơ sở dữ liệu
+            // Create video record in database
             $video = Video::create([
                 'google_drive_id' => $uploadedFile->id,
-                'title' => $request->input('title'),
+                'name' => $request->input('name'),
                 'description' => $request->input('description'),
                 'status' => $request->input('status') ? 1 : 0,
             ]);
 
-            // Tạo item nội dung khóa học
+            // Create course content item
             CoursesContentItem::create([
                 'courses_content_id' => $content_item_id,
                 'content_type' => 'video',
@@ -173,9 +174,10 @@ class VideoController extends Controller
             return redirect()->route('courses.management.courses.content', ['id' => $courses_id])
                 ->with('success', 'Video uploaded and added to course successfully!');
         } catch (Exception $e) {
-            // Nếu token hết hạn trong quá trình tải lên, chuyển hướng đến xác thực
-            if (strpos($e->getMessage(), 'invalid_grant') !== false ||
-                strpos($e->getMessage(), 'invalid_token') !== false) {
+            // If token expired during upload, redirect to authentication
+            if (str_contains($e->getMessage(), 'invalid_grant') ||
+                str_contains($e->getMessage(), 'invalid_token') ||
+                str_contains($e->getMessage(), 'Not authenticated')) {
 
                 $uploadData = $request->except('file');
 
@@ -191,7 +193,7 @@ class VideoController extends Controller
 
                 Session::put('video_upload_data', $uploadData);
 
-                // Chuyển hướng đến xác thực
+                // Redirect to authentication
                 return redirect()->route('google-drive.authenticate', [
                     'return_url' => route('courses.management.video.resume-upload', [
                         'courses_id' => $courses_id,
@@ -202,23 +204,29 @@ class VideoController extends Controller
                 ]);
             }
 
+            Log::error('Video upload error: ' . $e->getMessage());
             return redirect()->back()->with('error', 'Failed to upload video: ' . $e->getMessage());
         }
     }
+
     /**
      * Resume upload after authentication
      */
     public function resumeUpload($courses_id, $content_item_id)
     {
-        // Kiểm tra xem người dùng đã xác thực chưa
+        // Check if user is authenticated
         if (!$this->googleDriveService->isAuthenticated()) {
-            return redirect()->route('courses.management.video.add-form', [
+            return redirect()->route('google-drive.authenticate', [
+                'return_url' => route('courses.management.video.resume-upload', [
+                    'courses_id' => $courses_id,
+                    'content_item_id' => $content_item_id
+                ]),
                 'courses_id' => $courses_id,
                 'content_item_id' => $content_item_id
-            ])->with('error', 'You need to authenticate with Google Drive first.');
+            ]);
         }
 
-        // Kiểm tra dữ liệu tải lên
+        // Check upload data
         if (!Session::has('video_upload_data')) {
             return redirect()->route('courses.management.video.add-form', [
                 'courses_id' => $courses_id,
@@ -228,11 +236,11 @@ class VideoController extends Controller
 
         $uploadData = Session::pull('video_upload_data');
 
-        // Tạo request mới với dữ liệu đã lưu
+        // Create new request with saved data
         $request = new Request();
         $request->merge($uploadData);
 
-        // Nếu có file, cần xử lý đặc biệt vì file không thể lưu trong session
+        // If file info is missing, return to form
         if (!isset($uploadData['file']) || !$uploadData['file']) {
             return redirect()->route('courses.management.video.add-form', [
                 'courses_id' => $courses_id,
@@ -240,9 +248,55 @@ class VideoController extends Controller
             ])->with('error', 'The upload session has expired. Please try again.');
         }
 
-        // Gọi phương thức addVideo
-        return $this->addVideo($request, $courses_id, $content_item_id);
+        // Get file info
+        $fileInfo = $uploadData['file'];
+
+        // Verify the temp file still exists
+        if (!file_exists($fileInfo['temp_path'])) {
+            return redirect()->route('courses.management.video.add-form', [
+                'courses_id' => $courses_id,
+                'content_item_id' => $content_item_id
+            ])->with('error', 'The temporary file has expired. Please try uploading again.');
+        }
+
+        try {
+            // Upload directly to Google Drive
+            $fileName = $uploadData['name'] . '.' . pathinfo($fileInfo['original_name'], PATHINFO_EXTENSION);
+
+            // Get storage folder ID from environment variable
+            $folderId = $this->googleDriveService->getStorageFolderId();
+
+            // Upload file
+            $uploadedFile = $this->googleDriveService->uploadFile($fileInfo['temp_path'], $fileName, $folderId);
+
+            // Create video record in database
+            $video = Video::create([
+                'google_drive_id' => $uploadedFile->id,
+                'name' => $uploadData['name'],
+                'description' => $uploadData['description'],
+                'status' => $uploadData['status'] ? 1 : 0,
+            ]);
+
+            // Create course content item
+            CoursesContentItem::create([
+                'courses_content_id' => $content_item_id,
+                'content_type' => 'video',
+                'content_id' => $video->id,
+                'status' => $uploadData['status'] ? 1 : 0,
+            ]);
+
+            return redirect()->route('courses.management.courses.content', ['id' => $courses_id])
+                ->with('success', 'Video uploaded and added to course successfully!');
+
+        } catch (Exception $e) {
+            Log::error('Failed to resume video upload: ' . $e->getMessage());
+            return redirect()->route('courses.management.video.add-form', [
+                'courses_id' => $courses_id,
+                'content_item_id' => $content_item_id
+            ])->with('error', 'Failed to upload video: ' . $e->getMessage());
+        }
     }
+
     /**
      * List videos for a course
      */
@@ -265,7 +319,7 @@ class VideoController extends Controller
     /**
      * Edit video form
      */
-    public function edit($courses_id, $video_id)
+    public function edit($courses_id, $video_id): \Inertia\Response
     {
         $video = Video::findOrFail($video_id);
         $contentItem = CoursesContentItem::where('content_id', $video_id)
@@ -283,35 +337,35 @@ class VideoController extends Controller
     /**
      * Update video details
      */
-    public function update(Request $request, $courses_id, $video_id)
+    public function update(Request $request, $courses_id, $video_id): \Illuminate\Http\RedirectResponse
     {
+
         $request->validate([
-            'title' => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'status' => 'required|boolean',
+            'status' => 'boolean',
         ]);
 
         try {
             $video = Video::findOrFail($video_id);
             $video->update([
-                'title' => $request->input('title'),
+                'name' => $request->input('name'),
                 'description' => $request->input('description'),
-                'status' => $request->input('status') ? 1 : 0,
+                'status' => request()->input('status'),
             ]);
 
-            // Update content item status
             $contentItem = CoursesContentItem::where('content_id', $video_id)
                 ->where('content_type', 'video')
                 ->first();
 
             if ($contentItem) {
                 $contentItem->update([
-                    'status' => $request->input('status') ? 1 : 0,
+                    'status' => request()->input('status'),
                 ]);
             }
 
-            return redirect()->route('courses.management.courses.content', ['id' => $courses_id])
-                ->with('success', 'Video updated successfully!');
+            return back()
+                ->with(['message', 'Video updated successfully!','status'=>true]);
         } catch (Exception $e) {
             return redirect()->back()->with('error', 'Failed to update video: ' . $e->getMessage());
         }
@@ -320,7 +374,7 @@ class VideoController extends Controller
     /**
      * Delete video
      */
-    public function delete($courses_id, $video_id)
+    public function delete($courses_id, $video_id): \Illuminate\Http\RedirectResponse
     {
         try {
             $video = Video::findOrFail($video_id);
@@ -331,7 +385,7 @@ class VideoController extends Controller
                     $this->googleDriveService->deleteFile($video->google_drive_id);
                 } catch (Exception $e) {
                     // Log the error but continue with DB deletion
-                    \Log::error('Failed to delete video from Google Drive: ' . $e->getMessage());
+                    Log::error('Failed to delete video from Google Drive: ' . $e->getMessage());
                 }
             }
 

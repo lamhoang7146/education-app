@@ -7,6 +7,7 @@ const mode = ref(setThemeOnLoad());
 const user = computed(() => usePage().props.auth.user);
 const isMode = computed(() => mode.value);
 import { Menu, MenuButton, MenuItems } from '@headlessui/vue'
+import {route} from "ziggy-js";
 
 function switchTheme() {
     switchThemeOnLoad();
@@ -15,7 +16,7 @@ function switchTheme() {
 </script>
 <template>
     <div
-        class="h-[54px] transition-all fixed top-4 xl:left-[280px] right-[20px] left-[20px] rounded-md z-40 bg-content dark:dark-bg-content box-shadow-copy px-6 flex items-center justify-between">
+        class="h-[54px] transition-all !fixed top-4 xl:left-[280px] right-[20px] left-[20px] rounded-md z-40 bg-content dark:dark-bg-content box-shadow-copy px-6 flex items-center justify-between">
         <div class="flex items-center text-primary dark:dark-text-primary">
             <i  @click="emit('emitSidebar')" class="fa-solid fa-bars xl:hidden block mr-4 cursor-pointer text-xl"></i>
             <i class="fa-solid fa-magnifying-glass mr-3"></i>

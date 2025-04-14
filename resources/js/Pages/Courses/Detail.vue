@@ -15,7 +15,6 @@ const props = defineProps({
         required: true
     }
 });
-console.log(props.courses_detail)
 // Course data
 const course = props.courses_detail;
 function calculateFinalPrice(price, voucher) {
@@ -126,9 +125,8 @@ const categories = ref([
                     </div>
                 </div>
                 <div  class="mt-2">
-                    <Link :href="route('courses.learning',{id:1})" v-if="!course.is_free" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Buy Now</Link>
-                    <Link :href="route('courses.learning',{id:1})" v-else class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Learn Now</Link>
-
+<!--                    <Link :href="route('courses.learning',{id:1})" v-if="!course.is_free" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Buy Now</Link>-->
+<!--                    <Link :href="route('courses.learning',{id:1})" v-else class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Learn Now</Link>-->
                 </div>
             </Container>
         </div>

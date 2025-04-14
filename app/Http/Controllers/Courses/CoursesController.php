@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Courses;
 use App\Http\Controllers\Controller;
 use App\Models\Category_courses;
 use App\Models\Courses;
+use App\Models\CoursesContentItem;
+use App\Models\Quiz;
+use App\Models\Video;
 use Inertia\Inertia;
 
 class CoursesController extends Controller
@@ -48,7 +51,36 @@ class CoursesController extends Controller
             'content_count' => $content_count
         ]);
     }
-    public function learning($courses_id){
-        return Inertia::render('Courses/Learning', []);
+    public function learning($id,$type,$content_id){
+        $this->data['courses_detail'] = Courses::with([
+            'categoryCourses',
+            'user:id,name,image',
+            'coursesContents' => function($query) {
+                $query->where('status', 1)
+                    ->with(['contentItems' => function($query) {
+                        $query->where('status', 1)
+                            ->with(['content']);
+                    }]);
+            }
+        ])
+            ->select('id')
+            ->findOrFail($id);
+        if ($type === 'video') {
+            // Fetch video content
+            $this->data['content_item'] = Video::findOrFail($content_id);
+            $this->data['content_type'] = 'video';
+        } elseif ($type === 'quiz') {
+            // Fetch quiz with its detailed questions
+            $this->data['content_item'] = Quiz::with(['contentItem', 'quizContentDetails' => function($query) {
+                $query->select('id', 'question', 'answers', 'result', 'quiz_id');
+            }])->findOrFail($content_id);
+            $this->data['content_type'] = 'quiz';
+        } else {
+            // Handle invalid type
+            return redirect()->route('courses.detail', ['id' => $id])
+                ->with('error', 'Invalid content type specified.');
+        }
+
+        return Inertia::render('Courses/Learning', $this->data);
     }
 }

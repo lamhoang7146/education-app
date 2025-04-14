@@ -13,6 +13,7 @@ class GoogleDriveOauthService
 {
     protected Client $client;
     protected ?Drive $driveService = null;
+    protected ?string $storageFolderId;
 
     public function __construct()
     {
@@ -24,6 +25,9 @@ class GoogleDriveOauthService
         $this->client->setAccessType('offline');
         $this->client->setPrompt('consent');
         $this->client->setIncludeGrantedScopes(true);
+
+        // Get the storage folder ID from environment variable
+        $this->storageFolderId = env('GOOGLE_DRIVE_STORAGE_EDUCATION_FOLDER');
 
         // Try to load tokens if they exist
         $this->loadTokens();
@@ -97,7 +101,7 @@ class GoogleDriveOauthService
     }
 
     /**
-     * Save tokens to cache/session
+     * Save tokens to cache
      */
     protected function saveTokens(array $accessToken): void
     {
@@ -108,7 +112,7 @@ class GoogleDriveOauthService
     }
 
     /**
-     * Load tokens from cache/session
+     * Load tokens from cache
      */
     protected function loadTokens(): void
     {
@@ -143,7 +147,7 @@ class GoogleDriveOauthService
     /**
      * Upload file to Google Drive
      */
-    public function uploadFile(string $filePath, string $fileName, string $folderId = null): DriveFile
+    public function uploadFile(string $filePath, string $fileName, ?string $folderId = null): DriveFile
     {
         if (!$this->isAuthenticated()) {
             throw new Exception('Not authenticated with Google Drive');
@@ -154,6 +158,11 @@ class GoogleDriveOauthService
         $fileMetadata = new DriveFile([
             'name' => $fileName,
         ]);
+
+        // Use the environment variable folder ID if none provided
+        if (!$folderId && $this->storageFolderId) {
+            $folderId = $this->storageFolderId;
+        }
 
         if ($folderId) {
             $fileMetadata->setParents([$folderId]);
@@ -174,10 +183,19 @@ class GoogleDriveOauthService
     /**
      * List files in a folder
      */
-    public function listFilesInFolder(string $folderId): array
+    public function listFilesInFolder(string $folderId = null): array
     {
         if (!$this->isAuthenticated()) {
             throw new Exception('Not authenticated with Google Drive');
+        }
+
+        // Use default folder ID if none provided
+        if (!$folderId && $this->storageFolderId) {
+            $folderId = $this->storageFolderId;
+        }
+
+        if (!$folderId) {
+            throw new Exception('No folder ID provided');
         }
 
         $service = $this->getDriveService();
@@ -202,5 +220,13 @@ class GoogleDriveOauthService
 
         $service = $this->getDriveService();
         $service->files->delete($fileId);
+    }
+
+    /**
+     * Get the storage folder ID
+     */
+    public function getStorageFolderId(): ?string
+    {
+        return $this->storageFolderId;
     }
 }

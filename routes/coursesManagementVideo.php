@@ -2,7 +2,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Courses\VideoController;
 
-// Google Drive Authentication
 Route::get('/google-drive/authenticate', [VideoController::class, 'authenticate'])->name('google-drive.authenticate');
 Route::get('/google-drive/callback', [VideoController::class, 'callback'])->name('google-drive.callback');
 

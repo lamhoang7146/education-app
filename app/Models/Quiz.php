@@ -15,4 +15,8 @@ class Quiz extends Model
     {
         return $this->morphOne(CoursesContentItem::class, 'content');
     }
+    public function quizContentDetails()
+    {
+        return $this->hasMany(Quiz_content_detail::class, 'quiz_id');
+    }
 }

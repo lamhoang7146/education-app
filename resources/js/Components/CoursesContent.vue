@@ -1,14 +1,15 @@
 <script setup>
 import { ref } from "vue";
 import { defineProps } from "vue";
-
+import {route} from "ziggy-js";
+import {router} from "@inertiajs/vue3";
+const params = route().params
 const props = defineProps({
     content: {
         type: Object,
         required: true
     }
 });
-
 const isOpen = ref(false);
 
 // Function to determine content type icon
@@ -23,6 +24,11 @@ const formatTime = (seconds) => {
     const remainingSeconds = seconds % 60;
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
+
+const handleRequest = (id,type,content_id)=>{
+        router.get(route('courses.learning',{id,type,content_id}))
+}
+
 </script>
 
 <template>
@@ -42,14 +48,16 @@ const formatTime = (seconds) => {
                 <div
                     v-for="(item, index) in content.content_items"
                     :key="index"
-                    class="border-b-[1px] border-gray-200 py-2 px-4 flex items-center justify-between dark:border-opacity-20"
+                    @click="handleRequest(content.courses_id,item.content_type,item.content_id)"
+                    class="border-b-[1px] border-gray-200 py-2 px-4 flex items-center justify-between dark:border-opacity-20 cursor-pointer"
+                    :class="{'bg-slate-300':params.type === item.content_type && parseInt(params.content_id) === parseInt(item.content_id)}"
                 >
-                    <span>
+
+                        <span>
                         <i :class="`fa-solid ${getContentIcon(item.content_type)} mr-2 text-sm`"></i>
                         {{ item.content?.name || 'Untitled Content' }}
-                    </span>
+                        </span>
                     <span v-if="item.content_type === 'video'">{{ formatTime(item.content?.duration) }}</span>
-                    <span v-else>Quiz</span>
                 </div>
             </div>
         </div>

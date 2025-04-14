@@ -89,10 +89,24 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('quiz_results', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('quiz_id');
+            $table->integer('correct_answers');
+            $table->integer('incorrect_answers');
+            $table->json('user_answers')->nullable();
+            $table->timestamps();
+
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('quiz_id')->references('id')->on('quizzes');
+            $table->unique(['user_id', 'quiz_id']);
+        });
+
         Schema::create('videos', function (Blueprint $table) {
             $table->id();
             $table->string('google_drive_id', 255);
-            $table->string('title', 255);
+            $table->string('name', 255);
             $table->text('description');
             $table->tinyInteger('status');
             $table->timestamps();
