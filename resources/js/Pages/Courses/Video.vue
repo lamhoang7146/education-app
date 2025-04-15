@@ -13,6 +13,7 @@ console.log(props.data)
             allow="autoplay"
             class="w-full h-[550px]"
             allowfullscreen
+            
         ></iframe>
     </div>
     <Container class="mt-4">

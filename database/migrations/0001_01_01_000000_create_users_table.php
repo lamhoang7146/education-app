@@ -97,7 +97,6 @@ return new class extends Migration
             $table->integer('incorrect_answers');
             $table->json('user_answers')->nullable();
             $table->timestamps();
-
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('quiz_id')->references('id')->on('quizzes');
             $table->unique(['user_id', 'quiz_id']);

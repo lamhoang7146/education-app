@@ -7,7 +7,9 @@ use App\Models\Category_courses;
 use App\Models\Courses;
 use App\Models\CoursesContentItem;
 use App\Models\Quiz;
+use App\Models\QuizResult;
 use App\Models\Video;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 class CoursesController extends Controller
@@ -52,6 +54,7 @@ class CoursesController extends Controller
         ]);
     }
     public function learning($id,$type,$content_id){
+        $user_id = Auth::user()->id;
         $this->data['courses_detail'] = Courses::with([
             'categoryCourses',
             'user:id,name,image',
@@ -70,17 +73,46 @@ class CoursesController extends Controller
             $this->data['content_item'] = Video::findOrFail($content_id);
             $this->data['content_type'] = 'video';
         } elseif ($type === 'quiz') {
-            // Fetch quiz with its detailed questions
             $this->data['content_item'] = Quiz::with(['contentItem', 'quizContentDetails' => function($query) {
                 $query->select('id', 'question', 'answers', 'result', 'quiz_id');
             }])->findOrFail($content_id);
             $this->data['content_type'] = 'quiz';
+            $this->data['content_item']->quiz_result = QuizResult::select('user_answers')->where('quiz_id', '=', $content_id)
+                ->where('user_id', '=', $user_id)->first();
         } else {
             // Handle invalid type
             return redirect()->route('courses.detail', ['id' => $id])
                 ->with('error', 'Invalid content type specified.');
         }
 
-        return Inertia::render('Courses/Learning', $this->data);
+        return Inertia::render('Courses/Learning',[
+            ...$this->data,
+            'message'=>session('message'),
+            'status'=>session('status')
+        ]);
+    }
+    public function submitQuiz($id){
+        QuizResult::create([
+           'user_id'=>Auth::user()->id,
+            'quiz_id'=>$id,
+            'correct_answers'=>request()->correctAnswers,
+            'incorrect_answers'=>request()->inCorrectAnswers,
+            'user_answers'=>request()->userAnswers
+        ]);
+        return back()->with([
+           'message'=>'Your result have been saved!',
+           'status'=>true
+        ]);
+    }
+    public function resetQuiz($id) {
+        $user_id = Auth::user()->id;
+        QuizResult::where('quiz_id', $id)
+            ->where('user_id', $user_id)
+            ->delete();
+
+        return back()->with([
+            'message' => 'Quiz reset successfully',
+            'status' => true
+        ]);
     }
 }
