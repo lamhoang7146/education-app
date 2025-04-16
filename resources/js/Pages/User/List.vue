@@ -1,4 +1,6 @@
 <script setup>
+import {usePage} from '@inertiajs/vue3';
+const permissions = usePage().props.auth.user?.permissions;
 import {router, useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js"
 import Container from "../../Components/Container.vue";
@@ -408,6 +410,7 @@ const update = () => {
         <div class="flex justify-between items-center">
             <h1 class="text-lg font-medium">Filters</h1>
             <div
+                v-if="permissions?.includes('Add user')"
                 @click="isClose = true"
                 class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium cursor-pointer transition px-4 flex items-center">
                 <i class="fa-solid fa-plus text-sm font-light mr-2"></i>
@@ -529,6 +532,7 @@ const update = () => {
                 </td>
                 <Menu as="span" class="relative flex items-center">
                     <MenuButton
+                        v-if="permissions?.includes('Edit user')"
                         class="ml-4 rounded-full h-8 w-8 flex items-center justify-center cursor-pointer hover:hover-selected dark:hover:dark-hover-selected transition duration-300">
                         <i class="fa-solid fa-ellipsis-vertical"></i>
                     </MenuButton>

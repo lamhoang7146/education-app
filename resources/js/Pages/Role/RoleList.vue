@@ -1,7 +1,8 @@
 <script setup>
 import Container from "../../Components/Container.vue";
 import MessageSession from "../../Components/MessageSession.vue";
-
+import {usePage} from '@inertiajs/vue3';
+const permissionsOfUser = usePage().props.auth.user?.permissions;
 const props = defineProps({
     message: String,
     status: Boolean,
@@ -76,7 +77,7 @@ const update = () => {
 <template>
     <Modal :isOpen="isModalOpen" @close="closeModal">
         <div @click.stop
-             class="w-[900px] h-[90%] py-16 main px-16 bg-content dark:dark-bg-content rounded-md box-shadow-copy overflow-auto">
+             class="w-[1250px] h-[90%] py-16 main px-16 bg-content dark:dark-bg-content rounded-md box-shadow-copy overflow-auto">
             <h1 class="text-center font-medium text-2xl">Add new role</h1>
             <p class="text-center mt-2 opacity-90">Set role permission</p>
             <form @submit.prevent="submit">
@@ -88,19 +89,36 @@ const update = () => {
                     :error="form.errors.name"
                 />
                 <h1 class="mt-6 mb-4 font-medium text-xl">Role permissions</h1>
-                <div class="grid grid-cols-[180px_1fr] border-b-[1px] border-gray-300"
-                     v-for="permission in permissions">
-                    <div class="py-2 font-medium">{{ permission.name }}</div>
-                    <div class="flex items-center justify-end">
-                        <div class="py-3 px-2 min-w-[120px] text-end" v-for="group in permission.groups">
-                            <label :for="group.id" class="cursor-pointer">
-                                <input v-model="form.permission_id" :value="group.id"
-                                       class="scale-125 translate-y-[2px] mr-2 cursor-pointer accent-[#8278F2]"
-                                       type="checkbox" :id="group.id">{{ group.name }}
+                <div class="grid grid-cols-[200px_repeat(4,220px)] items-start border-b border-gray-200 py-4 gap-y-3 px-4 font-medium transition">
+                    <div>Role</div>
+                    <div>Get</div>
+                    <div>Add</div>
+                    <div>Edit</div>
+                    <div>Delete</div>
+                </div>
+                <div v-for="permission in permissions"
+                     class="grid grid-cols-[200px_repeat(4,220px)] items-start border-b border-gray-200 py-4 gap-y-3 px-4 transition hover:hover-selected dark:hover:dark-hover-selected">
+
+                    <div class="font-semibold">
+                        {{ permission.name }}
+                    </div>
+
+                    <template v-for="group in permission.groups">
+                        <div class="flex items-center space-x-2">
+                            <input
+                                v-model="form.permission_id"
+                                :id="group.id"
+                                :value="group.id"
+                                type="checkbox"
+                                class="accent-[#8278F2] w-4 h-4 cursor-pointer hover:hover-selected dark:dark-hover-selected"
+                            />
+                            <label :for="group.id" class=" text-sm cursor-pointer">
+                                {{ group.name }}
                             </label>
                         </div>
-                    </div>
+                    </template>
                 </div>
+
                 <div class="flex items-center my-6">
                     <input
                         class="scale-125 translate-y-[2px] mr-2 cursor-pointer accent-[#8278F2]"
@@ -118,7 +136,7 @@ const update = () => {
     </Modal>
     <Modal :isOpen="isModalOpenEdit" @close="closeModalEdit">
         <div @click.stop
-             class="w-[900px] h-[90%] py-16 main px-16 bg-content dark:dark-bg-content rounded-md box-shadow-copy overflow-auto">
+             class="w-[1250px] h-[90%] py-16 main px-16 bg-content dark:dark-bg-content rounded-md box-shadow-copy overflow-auto">
             <h1 class="text-center font-medium text-2xl">Edit new role</h1>
             <p class="text-center mt-2 opacity-90">Set role permission</p>
             <form @submit.prevent="update">
@@ -128,22 +146,37 @@ const update = () => {
                     type="text"
                     v-model="formEdit.name"
                     :error="formEdit.errors.name"
+                    :disabled="!permissionsOfUser?.includes('Update role')"
                 />
                 <h1 class="mt-6 mb-4 font-medium text-xl">Role permissions</h1>
-                <div class="grid grid-cols-[180px_1fr] border-b-[1px] border-gray-300"
-                     v-for="permission in permissions">
-                    <div class="py-2 font-medium">{{ permission.name }}</div>
-                    <div class="flex items-center justify-end">
-                        <div class="py-3 px-2 min-w-[120px] text-end" v-for="group in permission.groups">
-                            <label :for="group.id" class="cursor-pointer">
-                                <input
-                                    v-model="formEdit.permission_id"
-                                    :value="group.id"
-                                    class="scale-125 translate-y-[2px] mr-2 cursor-pointer accent-[#8278F2]"
-                                    type="checkbox" :id="group.id">{{ group.name }}
+                <div class="grid grid-cols-[200px_repeat(4,220px)] items-start border-b border-gray-200 py-4 gap-y-3 px-4 font-medium transition">
+                    <div>Role</div>
+                    <div>Get</div>
+                    <div>Add</div>
+                    <div>Edit</div>
+                    <div>Delete</div>
+                </div>
+                <div v-for="permission in permissions"
+                     class="grid grid-cols-[200px_repeat(4,220px)] items-start border-b border-gray-200 py-4 gap-y-3 px-4 transition hover:hover-selected dark:hover:dark-hover-selected">
+
+                    <div class="font-semibold">
+                        {{ permission.name }}
+                    </div>
+
+                    <template v-for="group in permission.groups">
+                        <div class="flex items-center space-x-2">
+                            <input
+                                v-model="formEdit.permission_id"
+                                :id="group.id"
+                                :value="group.id"
+                                type="checkbox"
+                                class="accent-[#8278F2] w-4 h-4 cursor-pointer hover:hover-selected dark:dark-hover-selected"
+                            />
+                            <label :for="group.id" class=" text-sm cursor-pointer">
+                                {{ group.name }}
                             </label>
                         </div>
-                    </div>
+                    </template>
                 </div>
                 <div class="flex items-center my-6">
                     <input
@@ -154,7 +187,7 @@ const update = () => {
                     factor
                     authentication to protect the role</label>
                 </div>
-                <div class="flex justify-center">
+                <div v-if="permissionsOfUser?.includes('Update role')" class="flex justify-center">
                     <Button :disabled="form.processing" class="px-4 !py-[6px]">Submit</Button>
                 </div>
             </form>
@@ -176,7 +209,7 @@ const update = () => {
             </div>
             <div class="mt-4">
                 <h1 class="font-medium text-lg">{{ role.name }}</h1>
-                <span class="text-[#7367F0] cursor-pointer" @click="openModalEdit(role.id)">Edit Role</span>
+                <span v-if="permissionsOfUser?.includes('Edit role')" class="text-[#7367F0] cursor-pointer" @click="openModalEdit(role.id)">Edit Role</span>
             </div>
         </Container>
         <Container class="grid grid-cols-2 relative">
@@ -187,6 +220,7 @@ const update = () => {
             <div class="">
                 <div class="text-right">
                     <span
+                        v-if="permissionsOfUser?.includes('Add role')"
                         @click="openModal"
                         class="px-3 w-[70%] bg-[#7367F0] text-white py-[6px] rounded-md text-sm outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition cursor-pointer">
                         Add New Role

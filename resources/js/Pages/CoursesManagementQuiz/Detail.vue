@@ -1,4 +1,6 @@
 <script setup>
+import {usePage} from '@inertiajs/vue3';
+const permissions = usePage().props.auth.user?.permissions;
 import Container from "../../Components/Container.vue";
 import Button from "../../Components/Button.vue";
 import {ref, reactive} from "vue";
@@ -636,7 +638,7 @@ const back = () => {
             </div>
         </div>
         <div>
-            <Button @click="openAddQuizDetail" class="!py-[5px] px-3"><span><i
+            <Button  v-if="permissions?.includes('Add quiz')" @click="openAddQuizDetail" class="!py-[5px] px-3"><span><i
                 class="fa-solid fa-plus text-xs -translate-y-[2px] mr-2"></i></span> Add question
             </Button>
         </div>
@@ -654,10 +656,10 @@ const back = () => {
                     <h1 class="font-medium">Q{{ index + 1 }}: {{ quiz_content_detail.question }}</h1>
                 </div>
                 <div class="flex items-center gap-x-2">
-                    <div class="cursor-pointer" @click="openEditQuizDetail(quiz_content_detail.id)">
+                    <div  v-if="permissions?.includes('Edit quiz')" class="cursor-pointer" @click="openEditQuizDetail(quiz_content_detail.id)">
                         <i class="fa-solid fa-pen-to-square text-green-500"></i>
                     </div>
-                    <div class="cursor-pointer" @click="openIsDelete(quiz_content_detail.id)">
+                    <div  v-if="permissions?.includes('Delete quiz')" class="cursor-pointer" @click="openIsDelete(quiz_content_detail.id)">
                         <i class="fa-solid fa-trash-can text-red-400"></i>
                     </div>
                 </div>

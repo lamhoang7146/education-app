@@ -130,14 +130,6 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('google_drive_tokens', function (Blueprint $table) {
-            $table->id();
-            $table->text('access_token');
-            $table->text('refresh_token')->nullable();
-            $table->timestamp('expires_at')->nullable();
-            $table->timestamps();
-        });
-
         Schema::create('password_reset_tokens', function (Blueprint $table) {
             $table->string('email')->primary();
             $table->string('token');

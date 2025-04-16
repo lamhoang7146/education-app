@@ -7,7 +7,6 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Illuminate\Support\Facades\DB;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<UserFactory> */
@@ -74,5 +73,35 @@ class User extends Authenticatable implements MustVerifyEmail
         if(isset($filters['selectedStatus']['id'])){
             $query->where('status', $filters['selectedStatus']['id']);
         }
+    }
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
+    }
+
+    public function permissions()
+    {
+        return $this->belongsToMany(Permission::class, 'role_permissions', 'role_id', 'permission_id', 'role_id');
+    }
+
+    public function hasPermission($permissionSlug)
+    {
+        return $this->permissions->pluck('slug')->contains($permissionSlug);
+    }
+
+    public function hasAnyPermission(array $permissionSlugs)
+    {
+        return $this->permissions->pluck('slug')->intersect($permissionSlugs)->isNotEmpty();
+    }
+
+    public function hasAllPermissions(array $permissionSlugs)
+    {
+        $userPermissions = $this->permissions->pluck('slug');
+        foreach ($permissionSlugs as $slug) {
+            if (!$userPermissions->contains($slug)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

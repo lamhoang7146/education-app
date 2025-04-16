@@ -1,4 +1,6 @@
 <script setup>
+import {usePage} from '@inertiajs/vue3';
+const permissions = usePage().props.auth.user?.permissions;
 import Container from "../../Components/Container.vue";
 import {Switch, Tab, TabGroup, TabList, TabPanel, TabPanels} from "@headlessui/vue";
 import {vAutoAnimate} from "@formkit/auto-animate";
@@ -93,7 +95,7 @@ const handleAddVideo = () => {
             </TabList>
             <tab-panels class="max-h-[500px] overflow-y-auto main mt-4 overflow-x-hidden">
                 <div v-auto-animate>
-                    <tab-panel>
+                    <tab-panel v-if="permissions?.includes('Quiz')">
                         <h1 class="text-lg font-medium mb-2">Add quiz</h1>
                         <form @submit.prevent="handleAddQuiz" class="w-1/2 grid gap-y-4">
                             <InputField
@@ -138,7 +140,7 @@ const handleAddVideo = () => {
                     </tab-panel>
                 </div>
                 <div v-auto-animate>
-                    <tab-panel>
+                    <tab-panel v-if="permissions?.includes('Video')">
                         <h1 class="text-lg font-medium mb-2">Add video</h1>
                         <form @submit.prevent="handleAddVideo" class="w-1/2 grid gap-y-4">
                             <InputField

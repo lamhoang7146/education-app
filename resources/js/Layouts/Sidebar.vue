@@ -1,7 +1,6 @@
 <script setup>
 import {usePage} from '@inertiajs/vue3';
-import {computed, ref} from "vue";
-import {vAutoAnimate} from "@formkit/auto-animate";
+import {computed} from "vue";
 import SidebarSubmenuLink from "../Components/SidebarSubmenuLink.vue";
 
 defineProps({
@@ -9,6 +8,9 @@ defineProps({
 })
 const emit = defineEmits(['emitSidebar'])
 const component = computed(() => usePage().component)
+const user = computed(()=> usePage().props.auth.user)
+const permissions = usePage().props?.auth?.user?.permissions;
+
 </script>
 
 <template>
@@ -45,8 +47,9 @@ const component = computed(() => usePage().component)
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
-            <SidebarSubmenuLink icon="fa-bars-progress" name="Courses management" reference="CoursesManagement" :component="component">
+            <SidebarSubmenuLink v-if="user && permissions?.includes('Courses')" icon="fa-bars-progress" name="Courses management" reference="CoursesManagement" :component="component">
                 <Link
+                    v-if="permissions?.includes('Courses category')"
                     :href="route('courses.management.category')"
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagementCategory/Category'}"
@@ -54,6 +57,7 @@ const component = computed(() => usePage().component)
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Category
                 </Link>
                 <Link
+                    v-if="permissions?.includes('Courses')"
                     :href="route('courses.management.courses')"
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagementCourses/Courses'}"
@@ -62,8 +66,9 @@ const component = computed(() => usePage().component)
                 </Link>
 
             </SidebarSubmenuLink>
-            <SidebarSubmenuLink icon="fa-user" name="Users" reference="User" :component="component">
+            <SidebarSubmenuLink v-if="user && permissions?.includes('User')" icon="fa-user" name="Users" reference="User" :component="component">
                 <Link
+                    v-if="permissions?.includes('User')"
                     :href="route('user.list')"
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'User/List'}"
@@ -72,6 +77,7 @@ const component = computed(() => usePage().component)
                 </Link>
             </SidebarSubmenuLink>
             <SidebarSubmenuLink
+                v-if="permissions?.includes('Role')"
                 :component="component"
                 reference="Role"
                 name="Roles"
@@ -85,6 +91,19 @@ const component = computed(() => usePage().component)
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
+            <Link
+                v-if="permissions?.includes('AI Analytics')"
+                :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'AiAnalytics'}"
+                @click="emit('emitSidebar')"
+                :href="route('ai.analytics')"
+                class=" flex justify-between items-center pl-4 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
+                <div class="flex items-center ">
+                    <div class="mr-3">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <p>AI analytics</p>
+                </div>
+            </Link>
         </ul>
     </div>
 </template>

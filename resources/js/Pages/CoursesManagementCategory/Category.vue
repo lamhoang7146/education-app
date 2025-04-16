@@ -1,4 +1,6 @@
 <script setup>
+import {usePage} from '@inertiajs/vue3';
+const permissions = usePage().props.auth.user?.permissions;
 import Container from "../../Components/Container.vue";
 import Button from "../../Components/Button.vue";
 import Modal from "../../Components/Modal.vue";
@@ -192,7 +194,7 @@ const handleUpdateCategory = () => {
             <p class="text-base">Manage your courses categories</p>
         </div>
         <div>
-            <Button @click="openAddCategory" class="!py-[5px] px-3"><span><i
+            <Button v-if="permissions?.includes('Add course category')"  @click="openAddCategory" class="!py-[5px] px-3"><span><i
                 class="fa-solid fa-plus text-xs -translate-y-[2px] mr-2"></i></span> Add category
             </Button>
         </div>
@@ -213,7 +215,7 @@ const handleUpdateCategory = () => {
             <p class="h-10 line-clamp-2 text-sm mt-1 text-gray-500 dark:dark-text-primary">
                 {{ category.description }}</p>
             <div class="flex justify-end items-center gap-x-4 mt-3">
-                <div @click="openEditCategory(category.id)" class="hover-selected dark:dark-hover-selected font-medium px-3 py-1 rounded-md text-sm cursor-pointer"><span><i
+                <div  v-if="permissions?.includes('Edit course category')" @click="openEditCategory(category.id)" class="hover-selected dark:dark-hover-selected font-medium px-3 py-1 rounded-md text-sm cursor-pointer"><span><i
                     class="fa-solid fa-pen-to-square text-sm mr-1"></i></span> Edit
                 </div>
             </div>

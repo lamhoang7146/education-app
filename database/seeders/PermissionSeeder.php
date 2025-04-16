@@ -20,22 +20,22 @@ class PermissionSeeder extends Seeder
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Add',
-            'slug' => 'Add',
+            'name' => 'Add user',
+            'slug' => 'Add user',
             'groupBy'=> 0,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Edit',
-            'slug' => 'Edit',
+            'name' => 'Edit user',
+            'slug' => 'Edit user',
             'groupBy'=> 0,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Delete',
-            'slug' => 'Delete',
+            'name' => 'Delete user',
+            'slug' => 'Delete user',
             'groupBy'=> 0,
             'created_at' => now(),
             'updated_at' => now(),
@@ -48,135 +48,247 @@ class PermissionSeeder extends Seeder
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Add',
-            'slug' => 'Add',
+            'name' => 'Add role',
+            'slug' => 'Add role',
             'groupBy'=> 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Edit',
-            'slug' => 'Edit',
+            'name' => 'Edit role',
+            'slug' => 'Edit role',
             'groupBy'=> 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Delete',
-            'slug' => 'Delete',
+            'name' => 'Update role',
+            'slug' => 'Update role',
             'groupBy'=> 1,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Course',
-            'slug' => 'Course',
+            'name' => 'Courses category',
+            'slug' => 'Courses category',
             'groupBy'=> 2,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Add',
-            'slug' => 'Add',
+            'name' => 'Add course category',
+            'slug' => 'Add course category',
             'groupBy'=> 2,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Edit',
-            'slug' => 'Edit',
+            'name' => 'Edit course category',
+            'slug' => 'Edit course category',
             'groupBy'=> 2,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Delete',
-            'slug' => 'Delete',
+            'name' => 'Delete course category',
+            'slug' => 'Delete course category',
             'groupBy'=> 2,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Courses',
+            'slug' => 'Courses',
+            'groupBy'=> 3,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Add courses',
+            'slug' => 'Add courses',
+            'groupBy'=> 3,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Edit courses',
+            'slug' => 'Edit courses',
+            'groupBy'=> 3,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Delete courses',
+            'slug' => 'Delete courses',
+            'groupBy'=> 3,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Courses module',
+            'slug' => 'Courses module',
+            'groupBy'=> 4,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Add courses module',
+            'slug' => 'Add courses module',
+            'groupBy'=> 4,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Edit courses module',
+            'slug' => 'Edit courses module',
+            'groupBy'=> 4,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Delete courses module',
+            'slug' => 'Delete courses module',
+            'groupBy'=> 4,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Courses content item',
+            'slug' => 'Courses content item',
+            'groupBy'=> 5,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Add courses content item',
+            'slug' => 'Add courses content item',
+            'groupBy'=> 5,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Edit courses content item',
+            'slug' => 'Edit courses content item',
+            'groupBy'=> 5,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Delete courses content item',
+            'slug' => 'Delete courses content item',
+            'groupBy'=> 5,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Quiz',
+            'slug' => 'Quiz',
+            'groupBy'=> 6,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Add quiz',
+            'slug' => 'Add quiz',
+            'groupBy'=> 6,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Edit quiz',
+            'slug' => 'Edit quiz',
+            'groupBy'=> 6,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('permissions')->insert([
+            'name' => 'Delete quiz',
+            'slug' => 'Delete quiz',
+            'groupBy'=> 6,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
             'name' => 'Video',
             'slug' => 'Video',
-            'groupBy'=> 3,
+            'groupBy'=> 7,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Add',
-            'slug' => 'Add',
-            'groupBy'=> 3,
+            'name' => 'Add video',
+            'slug' => 'Add video',
+            'groupBy'=> 7,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Edit',
-            'slug' => 'Edit',
-            'groupBy'=> 3,
+            'name' => 'Edit video',
+            'slug' => 'Edit video',
+            'groupBy'=> 7,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Delete',
-            'slug' => 'Delete',
-            'groupBy'=> 3,
+            'name' => 'Delete video',
+            'slug' => 'Delete video',
+            'groupBy'=> 7,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Video comment',
-            'slug' => 'Video comment',
-            'groupBy'=> 4,
+            'name' => 'Analytics',
+            'slug' => 'Analytics',
+            'groupBy'=> 8,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Add',
-            'slug' => 'Add',
-            'groupBy'=> 4,
+            'name' => 'Add analytics',
+            'slug' => 'Add analytics',
+            'groupBy'=> 8,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Edit',
-            'slug' => 'Edit',
-            'groupBy'=> 4,
+            'name' => 'Edit analytics',
+            'slug' => 'Edit analytics',
+            'groupBy'=> 8,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Delete',
-            'slug' => 'Delete',
-            'groupBy'=> 4,
+            'name' => 'Delete analytics',
+            'slug' => 'Delete analytics',
+            'groupBy'=> 8,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Video reply comment',
-            'slug' => 'Video reply comment',
-            'groupBy'=> 5,
+            'name' => 'AI Analytics',
+            'slug' => 'AI Analytics',
+            'groupBy'=> 9,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Add',
-            'slug' => 'Add',
-            'groupBy'=> 5,
+            'name' => 'Add AI Analytics',
+            'slug' => 'Add AI Analytics',
+            'groupBy'=> 9,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Edit',
-            'slug' => 'Edit',
-            'groupBy'=> 5,
+            'name' => 'Edit AI Analytics',
+            'slug' => 'Edit AI Analytics',
+            'groupBy'=> 9,
             'created_at' => now(),
             'updated_at' => now(),
         ]);
         DB::table('permissions')->insert([
-            'name' => 'Delete',
-            'slug' => 'Delete',
-            'groupBy'=> 5,
+            'name' => 'Delete AI Analytics',
+            'slug' => 'Delete AI Analytics',
+            'groupBy'=> 9,
             'created_at' => now(),
             'updated_at' => now(),
         ]);

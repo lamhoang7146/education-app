@@ -4,7 +4,7 @@ import { route } from 'ziggy-js';
 import {onMounted} from "vue";
 const props = defineProps({
     categories: Object
-})
+});
 import {ref} from 'vue';
 const goals = ref([
     {

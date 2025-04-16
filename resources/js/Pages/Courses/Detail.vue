@@ -1,6 +1,5 @@
 <script setup>
 import Container from "../../Components/Container.vue";
-import Button from "../../Components/Button.vue";
 import {ref} from "vue";
 import CoursesContent from "../../Components/CoursesContent.vue";
 import {vAutoAnimate} from "@formkit/auto-animate";

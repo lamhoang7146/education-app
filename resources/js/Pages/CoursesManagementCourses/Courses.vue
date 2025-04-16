@@ -1,4 +1,6 @@
 <script setup>
+import {usePage} from '@inertiajs/vue3';
+const permissions = usePage().props.auth.user?.permissions;
 import Container from "../../Components/Container.vue";
 import Button from "../../Components/Button.vue";
 import {computed, ref, watch} from "vue";
@@ -509,7 +511,7 @@ const url = computed(() => {
             </div>
         </div>
         <div>
-            <Button @click="openAddCourses" class="!py-[5px] px-3"><span><i
+            <Button  v-if="permissions?.includes('Add courses')" @click="openAddCourses" class="!py-[5px] px-3"><span><i
                 class="fa-solid fa-plus text-xs -translate-y-[2px] mr-2"></i></span> Add courses
             </Button>
         </div>
@@ -550,11 +552,13 @@ const url = computed(() => {
                 <h1 class="mt-3 mb-1 font-medium text-sm line-clamp-2 h-12">{{ item.title }}</h1>
                 <div class="flex items-center gap-x-2 text-xs">
                     <Link
+                        v-if="permissions?.includes('Courses module')"
                         :href="route('courses.management.courses.content',{id:item.id})"
                         class="dark:dark-hover-selected font-medium px-3 py-2 rounded-md cursor-pointer border-[1px] dark:border-none border-gray-200 w-full flex items-center justify-center"><span>
                             <i class="fa-solid fa-book-open mr-1 text-sm"></i></span> Contents
                     </Link>
                     <div
+                        v-if="permissions?.includes('Edit courses')"
                         @click="openEditCourses(item.id)"
                         class=" dark:dark-hover-selected font-medium px-3 py-2 rounded-md border-[1px] dark:border-none border-gray-200 cursor-pointer w-full flex items-center justify-center"><span><i
                         class="fa-solid fa-pen-to-square mr-1 text-sm"></i></span> Edit

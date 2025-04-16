@@ -1,10 +1,12 @@
 <script setup>
+import {usePage} from '@inertiajs/vue3';
+const permissions = usePage().props.auth.user?.permissions;
 import Container from "../../Components/Container.vue";
 import Button from "../../Components/Button.vue";
 import Modal from "../../Components/Modal.vue";
 import {ref, watch} from "vue";
 import InputField from "../../Components/InputField.vue";
-import {Switch} from "@headlessui/vue";
+import {Switch, TabPanel} from "@headlessui/vue";
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import MessageSession from "../../Components/MessageSession.vue";
@@ -341,7 +343,7 @@ const handleEditVideo = () => {
                 <h1 class="text-lg font-medium">Courses content</h1>
                 <p class="text-sm">Manager your courses content</p>
             </div>
-            <Button @click="openAddCoursesContent" class="px-4 flex items-center gap-x-2"><i class="fa-solid fa-plus text-sm"></i> Add courses content</Button>
+            <Button  v-if="permissions.includes('Add courses module')" @click="openAddCoursesContent" class="px-4 flex items-center gap-x-2"><i class="fa-solid fa-plus text-sm"></i> Add courses content</Button>
         </div>
     </Container>
     <MessageSession class="my-4" :message="message" :status="status" />
@@ -355,8 +357,8 @@ const handleEditVideo = () => {
                     <span class="pt-[3px] pb-[5px] px-3 text-xs font-medium rounded-md bg-red-100 text-red-500" v-else>Suspended</span>
                 </div>
                 <div class="flex items-center gap-x-2">
-                    <Link :href="route('courses.management.courses.content.item',{courses_id:courses_id,id:item.id})" class=" py-1 px-2 hover-selected text-primary rounded-sm cursor-pointer dark:dark-hover-selected">Add item</Link>
-                    <span @click="openEditCoursesContent(item.id)" class="hover:underline cursor-pointer underline-offset-2">Edit courses content</span>
+                    <Link v-if="permissions?.includes('Add courses content item')" :href="route('courses.management.courses.content.item',{courses_id:courses_id,id:item.id})" class=" py-1 px-2 hover-selected text-primary rounded-sm cursor-pointer dark:dark-hover-selected">Add item</Link>
+                    <span v-if="permissions?.includes('Edit courses module')" @click="openEditCoursesContent(item.id)" class="hover:underline cursor-pointer underline-offset-2">Edit courses content</span>
                 </div>
             </div>
             <div v-for="content_item in item?.content_items"
@@ -373,12 +375,12 @@ const handleEditVideo = () => {
                     </div>
 
                     <div class="flex items-center gap-x-3 text-sm">
-                        <Link class="text-indigo-500 hover:underline transition"
+                        <Link v-if="permissions?.includes('Quiz')" class="text-indigo-500 hover:underline transition"
                               :href="route('courses.management.quiz.detail',{quiz:content_item.content.id})">
                             View detail
                         </Link>
 
-                        <div @click="openEditQuiz(content_item)"
+                        <div  v-if="permissions?.includes('Edit quiz')" @click="openEditQuiz(content_item)"
                              class="cursor-pointer hover:underline transition">
                             Edit quiz
                         </div>
@@ -396,7 +398,7 @@ const handleEditVideo = () => {
                     </div>
 
                     <div class="flex items-center gap-x-3 text-sm">
-                        <div @click="openEditVideo(content_item)"
+                        <div v-if="permissions?.includes('Edit video')" @click="openEditVideo(content_item)"
                              class="cursor-pointer hover:underline transition">
                             Edit video
                         </div>
