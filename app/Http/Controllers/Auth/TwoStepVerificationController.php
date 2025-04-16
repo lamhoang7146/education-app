@@ -52,6 +52,9 @@ class TwoStepVerificationController extends Controller
         }
         session()->put('two_factor',true);
         $user->resetTwoFactorSecret();
-        return redirect()->intended('/');
+        return redirect()->intended('/')->with([
+            'message' => 'Verification successful!',
+            'status' => true
+        ]);
     }
 }

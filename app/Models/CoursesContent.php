@@ -9,7 +9,8 @@ class CoursesContent extends Model
     protected $fillable = [
       'name',
       'status',
-      'courses_id'
+      'courses_id',
+        'position'
     ];
     public function courses()
     {

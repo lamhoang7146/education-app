@@ -18,7 +18,7 @@ class TwoStepVerification
     {
         $user = Auth::user();
         if($user->getRole->is_important && !session('two_factor')){
-                return redirect()->route('two-step-verification');
+                return redirect()->guest(route('two-step-verification'));
         }
         return $next($request);
     }

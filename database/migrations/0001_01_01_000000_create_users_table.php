@@ -95,7 +95,7 @@ return new class extends Migration
             $table->unsignedBigInteger('quiz_id');
             $table->integer('correct_answers');
             $table->integer('incorrect_answers');
-            $table->json('user_answers')->nullable();
+            $table->string('user_answers',255)->nullable();
             $table->timestamps();
             $table->foreign('user_id')->references('id')->on('users');
             $table->foreign('quiz_id')->references('id')->on('quizzes');

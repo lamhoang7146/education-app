@@ -10,7 +10,6 @@ const emit = defineEmits(['emitSidebar'])
 const component = computed(() => usePage().component)
 const user = computed(()=> usePage().props.auth.user)
 const permissions = usePage().props?.auth?.user?.permissions;
-
 </script>
 
 <template>
@@ -77,7 +76,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                 </Link>
             </SidebarSubmenuLink>
             <SidebarSubmenuLink
-                v-if="permissions?.includes('Role')"
+                v-if="user && permissions.includes('Role')"
                 :component="component"
                 reference="Role"
                 name="Roles"
@@ -92,7 +91,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                 </Link>
             </SidebarSubmenuLink>
             <Link
-                v-if="permissions?.includes('AI Analytics')"
+                v-if="user && permissions?.includes('AI Analytics')"
                 :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'AiAnalytics'}"
                 @click="emit('emitSidebar')"
                 :href="route('ai.analytics')"

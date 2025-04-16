@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Courses;
 
 use App\Http\Controllers\Controller;
 use App\Models\CoursesContent;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
 
@@ -37,7 +38,7 @@ class CoursesManagementCoursesContent extends Controller
             'status' => ['boolean'],
         ]);
         $name = CoursesContent::create([...$data,'courses_id'=>$id])->name;
-        $this->with = back()->with([
+        return back()->with([
             'message' => "Content {$name} has been added successfully",
             'status' => true
         ]);
@@ -56,7 +57,7 @@ class CoursesManagementCoursesContent extends Controller
             'status' => ['boolean'],
         ]);
         $name = tap(CoursesContent::find(request()->id))->update($data)->name;
-        $this->with = back()->with([
+        return back()->with([
             'message' => "Content {$name} has been updated successfully",
             'status' => true
         ]);

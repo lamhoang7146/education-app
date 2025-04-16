@@ -4,13 +4,33 @@ const permissions = usePage().props.auth.user?.permissions;
 import Container from "../../Components/Container.vue";
 import Button from "../../Components/Button.vue";
 import Modal from "../../Components/Modal.vue";
-import {ref, watch} from "vue";
+import {onMounted, onUnmounted, ref, watch} from "vue";
 import InputField from "../../Components/InputField.vue";
-import {Switch, TabPanel} from "@headlessui/vue";
+import {Switch} from "@headlessui/vue";
 import {useForm} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 import MessageSession from "../../Components/MessageSession.vue";
 import Tiptap from "../../Components/Tiptap.vue";
+import { createSwapy } from 'swapy';
+
+const swapy = ref(null);
+const container = ref(null);
+
+onMounted(() => {
+    swapy.value = createSwapy(container.value, {
+        manualSwap: false,
+        dragAxis: 'y'
+    });
+    swapy.value.onSwapEnd(()=>{
+        console.log()
+    })
+});
+
+onUnmounted(() => {
+    swapy.value?.destroy();
+});
+
+
 const props = defineProps({
     courses_id:String,
     courses_contents:Object,
@@ -38,6 +58,7 @@ const handleAddCoursesContent = () => {
         onSuccess: () => {
             formAddCoursesContent.reset()
             closeAddCoursesContent()
+            statusAddCoursesContent.value = false
         }
     })
 }
@@ -347,66 +368,66 @@ const handleEditVideo = () => {
         </div>
     </Container>
     <MessageSession class="my-4" :message="message" :status="status" />
-    <div class="grid gap-y-4">
-        <Container v-for="item in courses_contents">
-            <div class="flex items-center justify-between">
-                <div class="flex items-center gap-x-2">
-                    <p class="text"><span class="font-medium">Module: </span><span>{{ item.name }}</span></p>
-                    <span class="pt-[3px] text-xs font-medium pb-[5px] px-3 rounded-md bg-green-100 text-green-500"
-                          v-if="item.status">Active</span>
-                    <span class="pt-[3px] pb-[5px] px-3 text-xs font-medium rounded-md bg-red-100 text-red-500" v-else>Suspended</span>
+    <div class="grid gap-y-4 mb-4" ref="container">
+        <div v-for="item in courses_contents" :data-swapy-slot="item.id">
+            <Container :data-swapy-item="item.id">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-x-2">
+                        <p class="text"><span class="font-medium">Module: </span><span>{{ item.name }}</span></p>
+                        <span class="pt-[3px] text-xs font-medium pb-[5px] px-3 rounded-md bg-green-100 text-green-500"
+                              v-if="item.status">Active</span>
+                        <span class="pt-[3px] pb-[5px] px-3 text-xs font-medium rounded-md bg-red-100 text-red-500" v-else>Suspended</span>
+                    </div>
+                    <div class="flex items-center gap-x-2">
+                        <Link v-if="permissions?.includes('Add courses content item')" :href="route('courses.management.courses.content.item',{courses_id:courses_id,id:item.id})" class=" py-1 px-2 hover-selected text-primary rounded-sm cursor-pointer dark:dark-hover-selected">Add item</Link>
+                        <span v-if="permissions?.includes('Edit courses module')" @click="openEditCoursesContent(item.id)" class="hover:underline cursor-pointer underline-offset-2">Edit courses content</span>
+                    </div>
                 </div>
-                <div class="flex items-center gap-x-2">
-                    <Link v-if="permissions?.includes('Add courses content item')" :href="route('courses.management.courses.content.item',{courses_id:courses_id,id:item.id})" class=" py-1 px-2 hover-selected text-primary rounded-sm cursor-pointer dark:dark-hover-selected">Add item</Link>
-                    <span v-if="permissions?.includes('Edit courses module')" @click="openEditCoursesContent(item.id)" class="hover:underline cursor-pointer underline-offset-2">Edit courses content</span>
-                </div>
-            </div>
-            <div v-for="content_item in item?.content_items"
-                 class="p-3 rounded-lg shadow-sm border border-gray-200  my-4">
-                <div v-if="content_item?.content_type.includes('quiz')" class="flex items-center justify-between">
-                    <div class="flex items-center gap-x-4">
-                        <i class="fa-solid fa-book"></i>
-                        <h1 class="font-medium">{{ content_item.content.name }}</h1>
+                <div v-for="content_item in item?.content_items"
+                     class="p-3 rounded-lg shadow-sm border border-gray-200  my-4">
+                    <div v-if="content_item?.content_type.includes('quiz')" class="flex items-center justify-between">
+                        <div class="flex items-center gap-x-4">
+                            <i class="fa-solid fa-book"></i>
+                            <h1 class="font-medium">{{ content_item.content.name }}</h1>
 
-                        <span class="px-3 py-[3px] text-xs font-medium rounded-full"
-                              :class="content_item.content.status ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
+                            <span class="px-3 py-[3px] text-xs font-medium rounded-full"
+                                  :class="content_item.content.status ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
                             {{ content_item.content.status ? 'Active' : 'Suspended' }}
                         </span>
+                        </div>
+
+                        <div class="flex items-center gap-x-3 text-sm">
+                            <Link v-if="permissions?.includes('Quiz')" class="text-indigo-500 hover:underline transition"
+                                  :href="route('courses.management.quiz.detail',{quiz:content_item.content.id})">
+                                View detail
+                            </Link>
+
+                            <div  v-if="permissions?.includes('Edit quiz')" @click="openEditQuiz(content_item)"
+                                  class="cursor-pointer hover:underline transition">
+                                Edit quiz
+                            </div>
+                        </div>
                     </div>
+                    <div v-else class="flex items-center justify-between">
+                        <div class="flex items-center gap-x-4">
+                            <i class="fa-solid fa-video"></i>
+                            <h1 class="font-medium">{{ content_item.content.name }}</h1>
 
-                    <div class="flex items-center gap-x-3 text-sm">
-                        <Link v-if="permissions?.includes('Quiz')" class="text-indigo-500 hover:underline transition"
-                              :href="route('courses.management.quiz.detail',{quiz:content_item.content.id})">
-                            View detail
-                        </Link>
+                            <span class="px-3 py-[3px] text-xs font-medium rounded-full"
+                                  :class="content_item.content.status ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
+                            {{ content_item.content.status ? 'Active' : 'Suspended' }}
+                        </span>
+                        </div>
 
-                        <div  v-if="permissions?.includes('Edit quiz')" @click="openEditQuiz(content_item)"
-                             class="cursor-pointer hover:underline transition">
-                            Edit quiz
+                        <div class="flex items-center gap-x-3 text-sm">
+                            <div v-if="permissions?.includes('Edit video')" @click="openEditVideo(content_item)"
+                                 class="cursor-pointer hover:underline transition">
+                                Edit video
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div v-else class="flex items-center justify-between">
-                    <div class="flex items-center gap-x-4">
-                        <i class="fa-solid fa-video"></i>
-                        <h1 class="font-medium">{{ content_item.content.name }}</h1>
-
-                        <span class="px-3 py-[3px] text-xs font-medium rounded-full"
-                              :class="content_item.content.status ? 'bg-green-100 text-green-600' : 'bg-red-100 text-red-600'">
-                            {{ content_item.content.status ? 'Active' : 'Suspended' }}
-                        </span>
-                    </div>
-
-                    <div class="flex items-center gap-x-3 text-sm">
-                        <div v-if="permissions?.includes('Edit video')" @click="openEditVideo(content_item)"
-                             class="cursor-pointer hover:underline transition">
-                            Edit video
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-        </Container>
+            </Container>
+        </div>
     </div>
  </template>
