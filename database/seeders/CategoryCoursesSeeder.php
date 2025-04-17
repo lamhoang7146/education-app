@@ -37,5 +37,49 @@ class CategoryCoursesSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        DB::table('category_courses')->insert([
+            'name' => 'Artificial Intelligence',
+            'description' => 'Explore the world of AI including machine learning, deep learning, neural networks and AI applications.',
+            'status'=> true,
+            'user_id'=>1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('category_courses')->insert([
+            'name' => 'Cloud Computing',
+            'description' => 'Learn about cloud platforms like AWS, Azure, and Google Cloud for deploying and managing applications.',
+            'status'=> true,
+            'user_id'=>1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('category_courses')->insert([
+            'name' => 'Cybersecurity',
+            'description' => 'Master security principles, ethical hacking, penetration testing and system protection techniques.',
+            'status'=> true,
+            'user_id'=>1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('category_courses')->insert([
+            'name' => 'Game Development',
+            'description' => 'Create interactive games using Unity, Unreal Engine and other game development frameworks.',
+            'status'=> true,
+            'user_id'=>1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
+        DB::table('category_courses')->insert([
+            'name' => 'DevOps',
+            'description' => 'Learn about CI/CD pipelines, containerization with Docker, Kubernetes and infrastructure as code.',
+            'status'=> true,
+            'user_id'=>1,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }

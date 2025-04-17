@@ -44,7 +44,7 @@ class LoginController extends Controller
 //------------------- After checking input data, I will log in with 1 condition is user's status must be active -------------------//
         if (Auth::attempt([...$credentials, 'status' => 1], request()->remember)) {
             request()->session()->regenerate();
-            return redirect()->route('home')->with('success', 'You are now logged in');
+            return redirect()->intended()->with('success', 'You are now logged in');
         }
 
 
@@ -53,5 +53,13 @@ class LoginController extends Controller
             'email' => 'Your email or password is incorrect.',
         ]);
 
+    }
+    public function redirectToLogin()
+    {
+        // Lưu URL hiện tại vào session
+        session(['url.intended' => url()->previous()]);
+
+        // Chuyển hướng đến trang đăng nhập
+        return redirect()->route('login');
     }
 }

@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Courses;
 use App\Http\Controllers\Controller;
 use App\Models\Category_courses;
 use App\Models\Courses;
-use App\Models\CoursesContentItem;
 use App\Models\Quiz;
 use App\Models\QuizResult;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class CoursesController extends Controller
@@ -23,11 +23,15 @@ class CoursesController extends Controller
         ])->select('id', 'title', 'price', 'is_free', 'level', 'status', 'category_courses_id', 'user_id','thumbnail','created_at')
             ->filter([request('category_courses_id')])
             ->where('status', 1)
-            ->paginate(10)->withQueryString();
+            ->paginate(8)->withQueryString();
         $this->data['category_courses'] = Category_courses::where('status', 1)
             ->select('id', 'name')
             ->get();
-        return Inertia::render('Courses/List',$this->data);
+        return Inertia::render('Courses/List',[
+            ...$this->data,
+            'message'=>session('message'),
+            'status'=>session('status')
+        ]);
     }
 
     public function detail($id){
@@ -48,13 +52,38 @@ class CoursesController extends Controller
         // Count the total number of course contents
         $content_count = $course_detail->coursesContents->count();
 
+        $first_content = $course_detail->coursesContents->first();
+        $first_content_item = null;
+
+        if ($first_content) {
+            $first_content_item = $first_content->contentItems->first();
+        }
+
+        $hasPurchased = false;
+
+        if (auth()->check()) {
+            $hasPurchased = DB::table('user_courses')
+                ->where('user_id', auth()->id())
+                ->where('courses_id', $id)
+                ->exists();
+        }
+
         return Inertia::render('Courses/Detail', [
             'courses_detail' => $course_detail,
-            'content_count' => $content_count
+            'content_count' => $content_count,
+            'hasPurchased' => $hasPurchased,
+            'message'=> session('message'),
+            'status'=> session('status'),
+            'first_content_item' => $first_content_item
         ]);
     }
     public function learning($id,$type,$content_id){
+
+        if(empty(Auth::user()->id)){
+            return redirect()->route('login');
+        }
         $user_id = Auth::user()->id;
+
         $this->data['courses_detail'] = Courses::with([
             'categoryCourses',
             'user:id,name,image',
@@ -87,8 +116,8 @@ class CoursesController extends Controller
 
         return Inertia::render('Courses/Learning',[
             ...$this->data,
-            'message'=>session('message'),
-            'status'=>session('status')
+//            'message'=>session('message'),
+//            'status'=>session('status')
         ]);
     }
     public function submitQuiz($id){

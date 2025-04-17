@@ -73,6 +73,15 @@ return new class extends Migration
             $table->timestamps();
         });
 
+        Schema::create('user_courses',function(Blueprint $table){
+            $table->id();
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('courses_id');
+            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('courses_id')->references('id')->on('courses');
+            $table->timestamps();
+        });
+
         Schema::create('quizzes', function (Blueprint $table) {
             $table->id();
             $table->string('name', 255);

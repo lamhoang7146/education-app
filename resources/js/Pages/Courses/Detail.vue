@@ -4,6 +4,11 @@ import {ref} from "vue";
 import CoursesContent from "../../Components/CoursesContent.vue";
 import {vAutoAnimate} from "@formkit/auto-animate";
 import {TabGroup, TabList, Tab, TabPanels, TabPanel} from '@headlessui/vue'
+import MessageSession from "../../Components/MessageSession.vue";
+import {router, usePage} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
+
+
 const props = defineProps({
     courses_detail: {
         type: Object,
@@ -12,9 +17,15 @@ const props = defineProps({
     content_count: {
         type: Number,
         required: true
-    }
+    },
+    first_content_item: Object,
+    hasPurchased:Boolean,
+    message:String,
+    status:Boolean
 });
+const user = usePage().props.auth.user
 // Course data
+
 const course = props.courses_detail;
 function calculateFinalPrice(price, voucher) {
     const discountPercentage = parseFloat(voucher) / 100;
@@ -40,10 +51,28 @@ const categories = ref([
     }
 ])
 
+const handleRequest = ()=>{
+
+    if(props.first_content_item){
+        router.get(route('courses.learning',{
+            id:props.first_content_item.id,
+            type:props.first_content_item.content_type,
+            content_id:props.first_content_item.content_id}))
+    }else{
+        console.log('nothing')
+    }
+
+
+}
+
 </script>
 <template>
+    <MessageSession
+    :message="message"
+    :status="status"
+    />
     <div class="grid grid-cols-[2fr_1fr] gap-x-5 w-full">
-        <div class="">
+        <div>
             <Container class="p-1">
                 <div>
                     <TabGroup>
@@ -124,8 +153,11 @@ const categories = ref([
                     </div>
                 </div>
                 <div  class="mt-2">
-<!--                    <Link :href="route('courses.learning',{id:1})" v-if="!course.is_free" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Buy Now</Link>-->
-<!--                    <Link :href="route('courses.learning',{id:1})" v-else class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Learn Now</Link>-->
+                    <Link v-if="!user" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block" :href="route('redirect.to.login')">Buy now</Link>
+                    <div v-else>
+                        <Link v-if="!hasPurchased" :href="route('courses.payment',{courses:course.id})" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Buy Now</Link>
+                        <div v-else @click="handleRequest" class="cursor-pointer text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Learn now</div>
+                    </div>
                 </div>
             </Container>
         </div>

@@ -30,7 +30,10 @@ function switchTheme() {
                 <i v-if="isMode === 'light'" @click="switchTheme" class="fa-solid fa-moon cursor-pointer"></i>
                 <i v-else @click="switchTheme" class="fa-solid fa-sun cursor-pointer"></i>
             </transition>
-            <i class="fa-solid fa-bell"></i>
+            <Link v-if="!user" :href="route('login')">
+                <i class="fa-solid fa-user"></i>
+
+            </Link>
             <!--      If user is exist      -->
             <Menu as="div" class="relative" v-if="user">
                 <MenuButton>

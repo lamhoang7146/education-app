@@ -61,10 +61,16 @@ class CoursesManagementQuiz extends Controller
             ],
             'status' => 'required',
         ]);
+
         $quiz->update([
             'name' => $credentials['name'],
             'status' => $credentials['status'],
         ]);
+
+        CoursesContentItem::where('content_id', $quiz->id)
+            ->where('content_type', 'quiz')
+            ->update(['status' => $credentials['status']]);
+
         return back()->with([
             'message' => "Quiz '{$credentials['name']}' updated successfully",
             'status' => true

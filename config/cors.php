@@ -37,6 +37,7 @@ return [
 //        'https://accounts.google.com',
 //        'https://www.googleapis.com',
 //        'https://accounts.google.com/o/oauth2/auth/',
+    'https://sandbox.vnpayment.vn/paymentv2/vpcpay.html',
     '*'
     ],
     'allowed_headers' => ['*'],

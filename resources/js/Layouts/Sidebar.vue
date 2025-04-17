@@ -46,7 +46,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
-            <SidebarSubmenuLink v-if="user && permissions?.includes('Courses')" icon="fa-bars-progress" name="Courses management" reference="CoursesManagement" :component="component">
+            <SidebarSubmenuLink v-if="user && permissions?.includes('Courses management')" icon="fa-bars-progress" name="Courses management" reference="CoursesManagement" :component="component">
                 <Link
                     v-if="permissions?.includes('Courses category')"
                     :href="route('courses.management.category')"
@@ -90,19 +90,38 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
-            <Link
-                v-if="user && permissions?.includes('AI Analytics')"
-                :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'AiAnalytics'}"
-                @click="emit('emitSidebar')"
-                :href="route('ai.analytics')"
-                class=" flex justify-between items-center pl-4 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
-                <div class="flex items-center ">
-                    <div class="mr-3">
-                        <i class="fa-solid fa-robot"></i>
+
+            <SidebarSubmenuLink v-if="user" icon="fa-chart-pie" name="Analytics" reference="Analytics" :component="component">
+                <Link
+                    v-if="user && permissions?.includes('Analytics')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Analytics'}"
+                    @click="emit('emitSidebar')"
+                    :href="route('analytics')"
+                    class=" flex justify-between items-center pl-6 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
+                    <div class="flex items-center ">
+                        <div class="mr-3">
+                            <i class="fa-solid fa-chart-simple"></i>
+                        </div>
+                        <p>Analytics</p>
                     </div>
-                    <p>AI analytics</p>
-                </div>
-            </Link>
+                </Link>
+
+                <Link
+                    v-if="user && permissions?.includes('AI Analytics')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'AiAnalytics'}"
+                    @click="emit('emitSidebar')"
+                    :href="route('ai.analytics')"
+                    class=" flex justify-between items-center pl-5 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
+                    <div class="flex items-center ">
+                        <div class="mr-3">
+                            <i class="fa-solid fa-robot"></i>
+                        </div>
+                        <p>AI analytics</p>
+                    </div>
+                </Link>
+            </SidebarSubmenuLink>
+
+
         </ul>
     </div>
 </template>

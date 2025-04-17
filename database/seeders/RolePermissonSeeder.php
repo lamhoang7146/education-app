@@ -253,5 +253,29 @@ class RolePermissonSeeder extends Seeder
             'created_at' => now(),
             'updated_at' => now(),
         ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 41,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 42,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 43,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+        DB::table('role_permissions')->insert([
+            'role_id' => 1,
+            'permission_id' => 44,
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
     }
 }
