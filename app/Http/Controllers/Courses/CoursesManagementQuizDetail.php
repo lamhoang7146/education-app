@@ -62,6 +62,7 @@ class CoursesManagementQuizDetail extends Controller
         Quiz_content_detail::create($quiz_detail);
         return back()->with(['message' => "Quiz {$quiz_detail["question"]} Added Successfully",'status' => true]);
     }
+
     public function generateWithAI(Request $request)
     {
         // Validate the request
@@ -73,7 +74,6 @@ class CoursesManagementQuizDetail extends Controller
             'quiz_id' => 'required|integer|exists:quizzes,id',
         ]);
 
-        // Process AI-generated questions (from request - we'll assume frontend sends the generated questions)
         $generatedQuestions = $request->input('generatedQuestions');
 
         if (!$generatedQuestions || !is_array($generatedQuestions)) {

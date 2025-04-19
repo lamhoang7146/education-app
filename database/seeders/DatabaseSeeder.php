@@ -2,8 +2,6 @@
 
 namespace Database\Seeders;
 
-use App\Models\Quiz_content_detail;
-
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -23,6 +21,8 @@ class DatabaseSeeder extends Seeder
             Courses::class,
             QuizSeeder::class,
             QuizContentDetailSeeder::class,
+            CoursesContent::class,
+            CoursesContentItem::class,
         ]);
     }
 }

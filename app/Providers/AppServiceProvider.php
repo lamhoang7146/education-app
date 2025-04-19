@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Database\Eloquent\Relations\Relation;
 use Illuminate\Support\ServiceProvider;
+use Inertia\Inertia;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,4 +26,5 @@ class AppServiceProvider extends ServiceProvider
             'video' => \App\Models\Video::class
         ]);
     }
+
 }

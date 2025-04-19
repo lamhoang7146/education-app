@@ -34,8 +34,9 @@ class CoursesController extends Controller
         ]);
     }
 
-    public function detail($id){
-        $course_detail = Courses::with([
+    public function detail($id)
+    {
+        $this->data['courses_detail'] = Courses::with([
             'categoryCourses',
             'user:id,name,image',
             'coursesContents' => function($query) {
@@ -50,33 +51,31 @@ class CoursesController extends Controller
             ->findOrFail($id);
 
         // Count the total number of course contents
-        $content_count = $course_detail->coursesContents->count();
+        $this->data['content_count'] = $this->data['courses_detail']->coursesContents->count();
 
-        $first_content = $course_detail->coursesContents->first();
-        $first_content_item = null;
+        $first_content = $this->data['courses_detail']->coursesContents->first();
+        $this->data['first_content_item'] = null;
 
         if ($first_content) {
-            $first_content_item = $first_content->contentItems->first();
+            $this->data['first_content_item'] = $first_content->contentItems->first();
         }
 
-        $hasPurchased = false;
+        $this->data['hasPurchased'] = false;
 
         if (auth()->check()) {
-            $hasPurchased = DB::table('user_courses')
+            $this->data['hasPurchased'] = DB::table('user_courses')
                 ->where('user_id', auth()->id())
                 ->where('courses_id', $id)
                 ->exists();
         }
 
         return Inertia::render('Courses/Detail', [
-            'courses_detail' => $course_detail,
-            'content_count' => $content_count,
-            'hasPurchased' => $hasPurchased,
-            'message'=> session('message'),
-            'status'=> session('status'),
-            'first_content_item' => $first_content_item
+            ...$this->data,
+            'message' => session('message'),
+            'status' => session('status'),
         ]);
     }
+
     public function learning($id,$type,$content_id){
 
         if(empty(Auth::user()->id)){
@@ -116,8 +115,8 @@ class CoursesController extends Controller
 
         return Inertia::render('Courses/Learning',[
             ...$this->data,
-//            'message'=>session('message'),
-//            'status'=>session('status')
+            'message'=>session('message'),
+            'status'=>session('status')
         ]);
     }
     public function submitQuiz($id){

@@ -102,12 +102,11 @@ const prevSlide = () => {
     goToSlide(newIndex);
 };
 
-// Auto play slide (tùy chọn)
 let slideInterval;
 const startAutoPlay = () => {
     slideInterval = setInterval(() => {
         nextSlide();
-    }, 5000); // Chuyển slide mỗi 5 giây
+    }, 5000);
 };
 
 const stopAutoPlay = () => {
@@ -115,7 +114,7 @@ const stopAutoPlay = () => {
 };
 
 onMounted(() => {
-    startAutoPlay(); // Bắt đầu tự động chạy slide khi component được mount
+    startAutoPlay();
 });
 </script>
 <template>
@@ -130,8 +129,16 @@ onMounted(() => {
     <Container class="mt-4 ">
         <h1 class="text-xl font-medium">Advance Your Career. Learn In-demand Skills.</h1>
         <p>Upskill in business analytics, health care, graphic design, management and more.</p>
-        <div class="space-x-6 mt-4">
-            <Link class="px-4 py-2 border-[1px] border-gray-200 rounded-full hover:hover-selected transition duration-300" :href="route('courses.index')" :data="{category_courses_id:category.id}" v-for="category in categories">{{category.name}}</Link>
+        <div class="flex flex-wrap gap-3 mt-4">
+            <Link
+                v-for="category in categories"
+                :key="category.id"
+                :href="route('courses.index')"
+                :data="{ category_courses_id: category.id }"
+                class="px-4 py-2 rounded-full border transition-all duration-200 shadow-sm"
+            >
+                {{ category.name }}
+            </Link>
         </div>
     </Container>
     <Container class="mt-4">
