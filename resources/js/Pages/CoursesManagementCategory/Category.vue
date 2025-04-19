@@ -204,7 +204,7 @@ const handleUpdateCategory = () => {
         :message="message"
         :status="status"
     />
-    <div class="grid grid-cols-3 mt-6 gap-x-6">
+    <div class="grid grid-cols-3 mt-6 gap-6 mb-4">
         <Container v-for="category in category_courses">
             <div class="flex items-center justify-between">
                 <h1 class="text-lg font-medium">{{ category.name }}</h1>

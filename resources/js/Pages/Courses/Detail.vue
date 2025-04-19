@@ -8,7 +8,6 @@ import MessageSession from "../../Components/MessageSession.vue";
 import {router, usePage} from "@inertiajs/vue3";
 import {route} from "ziggy-js";
 
-
 const props = defineProps({
     courses_detail: {
         type: Object,
@@ -61,16 +60,17 @@ const handleRequest = ()=>{
     }else{
         console.log('nothing')
     }
-
-
 }
 
 </script>
 <template>
-    <MessageSession
-    :message="message"
-    :status="status"
-    />
+    <div v-if="message || status">
+        <MessageSession
+            class="mb-4"
+            :message="message"
+            :status="status"
+        />
+    </div>
     <div class="grid grid-cols-[2fr_1fr] gap-x-5 w-full">
         <div>
             <Container class="p-1">
@@ -153,9 +153,9 @@ const handleRequest = ()=>{
                     </div>
                 </div>
                 <div  class="mt-2">
-                    <Link v-if="!user" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block" :href="route('redirect.to.login')">Buy now</Link>
+                    <Link v-if="!user" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block" :href="route('redirect.to.login')">{{course.is_free ? 'Learn now' : 'Buy now'}}</Link>
                     <div v-else>
-                        <Link v-if="!hasPurchased" :href="route('courses.payment',{courses:course.id})" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Buy Now</Link>
+                        <Link v-if="!hasPurchased && !course.is_free" :href="route('courses.payment',{courses:course.id})" class="text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Buy Now</Link>
                         <div v-else @click="handleRequest" class="cursor-pointer text-center bg-[#7367F0] text-white py-2 rounded-md outline-0 font-medium disabled:opacity-70 disabled:cursor-wait transition block">Learn now</div>
                     </div>
                 </div>

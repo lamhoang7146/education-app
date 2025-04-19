@@ -91,7 +91,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                 </Link>
             </SidebarSubmenuLink>
 
-            <SidebarSubmenuLink v-if="user" icon="fa-chart-pie" name="Analytics" reference="Analytics" :component="component">
+            <SidebarSubmenuLink v-if="user && permissions?.includes('Analytics')" icon="fa-chart-pie" name="Analytics" reference="Analytics" :component="component">
                 <Link
                     v-if="user && permissions?.includes('Analytics')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Analytics'}"

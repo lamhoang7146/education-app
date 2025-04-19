@@ -67,19 +67,25 @@ class PaymentController extends Controller
             $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret); //
             $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
         }
-
             return Inertia::location($vnp_Url);
-
-
     }
     public function handleUpdatePayment(Courses $courses){
-        user_courses::create([
-           'user_id'=> Auth::user()->id,
-            'courses_id' => $courses->id
-        ]);
-        return redirect()->route('courses.detail',['id'=>$courses->id])->with([
-           'message'=> "You have successfully paid for the {$courses->id} course.",
-           'status'=> true
+        if(!empty(request()->vnp_ResponseCode) && request()->vnp_ResponseCode == '00'){
+            user_courses::create([
+                'user_id'=> Auth::user()->id,
+                'courses_id' => $courses->id
+            ]);
+
+
+            return Inertia::location(route('courses.detail',['id'=>$courses->id]))->with([
+                'message'=> "Payment successful. You can now access the course.",
+                'status'=> true
+            ]);
+        }
+
+        return Inertia::location(route('courses.detail',['id'=>$courses->id]))->with([
+            'message'=> "Payment failed. Please try again.",
+            'status'=> false
         ]);
     }
 }

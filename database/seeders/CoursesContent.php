@@ -4,15 +4,14 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
 
-class QuizContentDetailSeeder extends Seeder
+class CoursesContent extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-
+        //
     }
 }

@@ -75,13 +75,13 @@ const submit = () => {
             <p>New on our platform?</p>
             <Link :href="route('register')" class="text-[#7367F0]">Create an account</Link>
         </div>
-        <div class="flex items-center space-x-4 my-4">
-            <div class="w-full h-[.5px] bg-gray-200"></div>
-            <span>or</span>
-            <div class="w-full h-[.5px] bg-gray-200"></div>
-        </div>
-        <Link :href="route('google-auth')" class="text-center bg-red-400 w-full text-white py-2 rounded-md font-medium block space-x-2">
-            <span><i class="fa-brands fa-google"></i></span><span>Sign in with Google</span></Link>
+<!--        <div class="flex items-center space-x-4 my-4">-->
+<!--            <div class="w-full h-[.5px] bg-gray-200"></div>-->
+<!--            <span>or</span>-->
+<!--            <div class="w-full h-[.5px] bg-gray-200"></div>-->
+<!--        </div>-->
+<!--        <Link :href="route('google-auth')" class="text-center bg-red-400 w-full text-white py-2 rounded-md font-medium block space-x-2">-->
+<!--            <span><i class="fa-brands fa-google"></i></span><span>Sign in with Google</span></Link>-->
 
     </form>
 </template>
