@@ -54,7 +54,7 @@ const handleRequest = ()=>{
 
     if(props.first_content_item){
         router.get(route('courses.learning',{
-            id:props.first_content_item.id,
+            id:parseInt(route().params.id),
             type:props.first_content_item.content_type,
             content_id:props.first_content_item.content_id}))
     }else{

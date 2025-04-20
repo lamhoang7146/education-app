@@ -1,11 +1,32 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import {ref, onMounted, watch} from 'vue';
 import Chart from 'chart.js/auto';
 import Container from "./../Components/Container.vue";
+import {Listbox, ListboxButton, ListboxOption, ListboxOptions} from "@headlessui/vue";
+import {router} from "@inertiajs/vue3";
+import {route} from "ziggy-js";
+const params = route().params;
+const props = defineProps({
+    chartData: Object,
+    categories:Object,
+    topCourses: Object,
+    selectedCategoryId: [Number, String, null]
+});
 
+let selectedCategory = ref(props.categories.find(item=> item.id === parseInt(params.category_courses_id)));
+const categoryCoursesParams = ref([{id:null,name:'Select category'},...props.categories]);
+
+watch(selectedCategory, (newCategory) => {
+    router.get(route('analytics'), {
+        category_courses_id: newCategory ? newCategory.id : null,
+    },{
+        preserveScroll: true,
+    })
+})
 const chartRef = ref(null);
-const pieChartRef = ref(null);
 let barChart = null;
+
+const pieChartRef = ref(null);
 let pieChart = null;
 
 const labels = [
@@ -16,8 +37,8 @@ const labels = [
 const data = {
     labels: labels,
     datasets: [{
-        label: ['My First Dataset'],
-        data: [65, 59, 80, 81, 56, 55, 40, 21, 34, 78, 88, 60],
+        label: ['Monthly Revenue (VND)'],
+        data: props.chartData.data,
         backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
             'rgba(255, 159, 64, 0.2)',
@@ -49,37 +70,12 @@ const data = {
         borderWidth: 1
     }]
 };
-
-// Dữ liệu cho biểu đồ pie
-const pieData = {
-    labels: ['Course A', 'Course B', 'Course C', 'Course D', 'Course E'],
-    datasets: [{
-        label: 'Course Distribution',
-        data: [30, 25, 15, 20, 10],
-        backgroundColor: [
-            'rgba(255, 99, 132, 0.7)',
-            'rgba(54, 162, 235, 0.7)',
-            'rgba(255, 205, 86, 0.7)',
-            'rgba(75, 192, 192, 0.7)',
-            'rgba(153, 102, 255, 0.7)'
-        ],
-        borderColor: [
-            'rgb(255, 99, 132)',
-            'rgb(54, 162, 235)',
-            'rgb(255, 205, 86)',
-            'rgb(75, 192, 192)',
-            'rgb(153, 102, 255)'
-        ],
-        borderWidth: 1
-    }]
-};
-
 const config = {
     type: 'bar',
     data: data,
     options: {
         responsive: true,
-        maintainAspectRatio: false, // Cho phép canvas co giãn tự do trong container
+        maintainAspectRatio: false,
         layout: {
             padding: {
                 top: 20,
@@ -99,7 +95,7 @@ const config = {
             },
             title: {
                 display: true,
-                text: 'Monthly Data Analysis',
+                text: 'Monthly Revenue Analysis ' + new Date().getFullYear(),
                 font: {
                     size: 20
                 },
@@ -122,6 +118,10 @@ const config = {
                 ticks: {
                     font: {
                         size: 12
+                    },
+                    // Định dạng hiển thị số VND
+                    callback: function(value) {
+                        return value.toLocaleString('vi-VN') + ' đ';
                     }
                 }
             }
@@ -129,6 +129,28 @@ const config = {
     }
 };
 
+const pieData = {
+    labels: props.chartData.courseDistribution.labels,
+    datasets: [{
+        label: 'Course Distribution',
+        data: props.chartData.courseDistribution.data,
+        backgroundColor: [
+            'rgba(255, 99, 132, 0.7)',
+            'rgba(54, 162, 235, 0.7)',
+            'rgba(255, 205, 86, 0.7)',
+            'rgba(75, 192, 192, 0.7)',
+            'rgba(153, 102, 255, 0.7)'
+        ],
+        borderColor: [
+            'rgb(255, 99, 132)',
+            'rgb(54, 162, 235)',
+            'rgb(255, 205, 86)',
+            'rgb(75, 192, 192)',
+            'rgb(153, 102, 255)'
+        ],
+        borderWidth: 1
+    }]
+};
 const pieConfig = {
     type: 'pie',
     data: pieData,
@@ -146,7 +168,7 @@ const pieConfig = {
             },
             title: {
                 display: true,
-                text: 'Course Distribution',
+                text: 'Course Distribution by Category  ',
                 font: {
                     size: 18
                 },
@@ -169,6 +191,7 @@ const pieConfig = {
         }
     }
 };
+
 
 onMounted(() => {
     // Khởi tạo biểu đồ bar
@@ -201,41 +224,40 @@ onMounted(() => {
         </Container>
         <Container>
             <div>
-                <h1 class="text-lg font-medium">Top Scoring Users</h1>
-                <div>
-
+                <div class="flex justify-between items-center">
+                    <h1 class="text-lg font-medium">Best selling courses</h1>
+                        <Listbox v-model="selectedCategory">
+                            <div class="relative">
+                                <ListboxButton class="border-[1px] border-gray-200 rounded-md py-2 px-4 text-left min-w-56 text-sm">
+                                    {{ selectedCategory?.name || 'Select category' }}
+                                </ListboxButton>
+                                <transition name="list">
+                                    <ListboxOptions
+                                        class="absolute top-[120%] bg-behind dark:dark-bg-behind rounded-md p-2 box-shadow-copy w-full z-30">
+                                        <ListboxOption
+                                            class="cursor-pointer p-2 text-sm hover:hover-selected dark:hover:dark-hover-selected transition rounded-md"
+                                            v-for="item in categoryCoursesParams"
+                                            :key="item.id"
+                                            :value="item">
+                                            {{ item.name }}
+                                        </ListboxOption>
+                                    </ListboxOptions>
+                                </transition>
+                            </div>
+                        </Listbox>
                 </div>
+
                 <div>
-                    <div class="px-2 py-4 grid grid-cols-[.8fr_3fr_.8fr]">
+                    <div class="px-2 py-4 grid grid-cols-[.8fr_3fr_.5fr]">
                         <div>Rank</div>
-                        <div>Student</div>
-                        <div>Score</div>
+                        <div>Courses</div>
+                        <div>Enrollment</div>
                     </div>
                     <div>
-                        <div class="border-t-[.5px] border-gray-200 py-4 px-2 grid grid-cols-[.8fr_3fr_.8fr] last:pb-0">
-                            <div>1</div>
-                            <div>Nguyễn Lâm Hoàng</div>
-                            <div>98%</div>
-                        </div>
-                        <div class="border-t-[.5px] border-gray-200 py-4 px-2 grid grid-cols-[.8fr_3fr_.8fr] last:pb-0">
-                            <div>1</div>
-                            <div>Nguyễn Lâm Hoàng</div>
-                            <div>98%</div>
-                        </div>
-                        <div class="border-t-[.5px] border-gray-200 py-4 px-2 grid grid-cols-[.8fr_3fr_.8fr] last:pb-0">
-                            <div>1</div>
-                            <div>Nguyễn Lâm Hoàng</div>
-                            <div>98%</div>
-                        </div>
-                        <div class="border-t-[.5px] border-gray-200 py-4 px-2 grid grid-cols-[.8fr_3fr_.8fr] last:pb-0">
-                            <div>1</div>
-                            <div>Nguyễn Lâm Hoàng</div>
-                            <div>98%</div>
-                        </div>
-                        <div class="border-t-[.5px] border-gray-200 py-4 px-2 grid grid-cols-[.8fr_3fr_.8fr] last:pb-0">
-                            <div>1</div>
-                            <div>Nguyễn Lâm Hoàng</div>
-                            <div>98%</div>
+                        <div v-for="top in topCourses" class="border-t-[.5px] border-gray-200 py-4 px-2 grid grid-cols-[.8fr_3fr_.5fr] last:pb-0 text-sm">
+                            <div>{{top.id}}</div>
+                            <div class="line-clamp-1">{{top.title}}</div>
+                            <div class="text-center">{{top.enrollment_count}}</div>
                         </div>
 
                     </div>
@@ -250,5 +272,18 @@ canvas {
     display: block;
     width: 100% !important;
     height: 100% !important;
+}
+ .list-enter-from, .list-leave-to {
+     transform: translateY(-10px);
+     opacity: 0;
+ }
+
+.list-enter-to, .list-leave-from {
+    transform: translateY(0px);
+    opacity: 1;
+}
+
+.list-enter-active, .list-leave-active {
+    transition: .2s ease-in-out;
 }
 </style>
