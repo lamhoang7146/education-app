@@ -17,12 +17,15 @@ const permissions = usePage().props?.auth?.user?.permissions;
         :class="{'translate-x-[0%]':sidebar}"
         class="w-[260px] xl:-translate-x-0 -translate-x-[100%] transition-transform duration-300 bg-content dark:dark-bg-content fixed top-0 left-0 bottom-0 z-50 shadow-xl pl-2 pr-1 py-4 grid grid-rows-[40px_1fr] gap-y-4">
         <div class="flex items-center ml-4 gap-x-2 h-10">
-            <div class="text-2xl">
-                Logo
+            <div>
+                <svg width="35" height="24" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path class="text-[#8278F2]" fill-rule="evenodd" clip-rule="evenodd" d="M0.00183571 0.3125V7.59485C0.00183571 7.59485 -0.141502 9.88783 2.10473 11.8288L14.5469 23.6837L21.0172 23.6005L19.9794 10.8126L17.5261 7.93369L9.81536 0.3125H0.00183571Z" fill="currentColor"></path>
+                    <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd" d="M8.17969 17.7762L13.3027 3.75173L17.589 8.02192L8.17969 17.7762Z" fill="#161616"></path>
+                    <path opacity="0.06" fill-rule="evenodd" clip-rule="evenodd" d="M8.58203 17.2248L14.8129 5.24231L17.6211 8.05247L8.58203 17.2248Z" fill="#161616"></path>
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M8.25781 17.6914L25.1339 0.3125H33.9991V7.62657C33.9991 7.62657 33.8144 10.0645 32.5743 11.3686L21.0179 23.6875H14.5487L8.25781 17.6914Z" fill="currentColor"></path>
+                </svg>
             </div>
-            <div class="text-2xl">
-                Vue
-            </div>
+            <p class="font-medium">Community of the galaxy</p>
         </div>
         <ul class="overflow-y-auto sidebar pr-2">
             <Link
@@ -44,6 +47,14 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/List'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
                     <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
+                </Link>
+                <Link
+                    v-if="user"
+                    :href="route('courses.purchased')"
+                    @click="emit('emitSidebar')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/Purchased'}"
+                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Purchased course
                 </Link>
             </SidebarSubmenuLink>
             <SidebarSubmenuLink v-if="user && permissions?.includes('Courses management')" icon="fa-bars-progress" name="Courses management" reference="CoursesManagement" :component="component">

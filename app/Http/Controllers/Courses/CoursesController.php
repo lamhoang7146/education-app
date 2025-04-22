@@ -143,4 +143,36 @@ class CoursesController extends Controller
             'status' => true
         ]);
     }
+    public function purchased(){
+        $userId = Auth::user()->id;
+        $this->data['purchased_courses'] = Courses::with(['user:id,name,image'])
+            ->join('user_courses', 'courses.id', '=', 'user_courses.courses_id')
+            ->join('category_courses', 'courses.category_courses_id', '=', 'category_courses.id')
+            ->where('user_courses.user_id', $userId)
+            ->filter([request('category_courses_id')])
+            ->select(
+                'courses.id',
+                'courses.title',
+                'courses.price',
+                'courses.is_free',
+                'courses.level',
+                'courses.status',
+                'courses.category_courses_id',
+                'courses.user_id',
+                'courses.thumbnail',
+                'courses.created_at',
+                'category_courses.name as category_name'
+            )
+            ->paginate(8)->withQueryString();
+
+        $this->data['category_courses'] = Category_courses::where('status', 1)
+            ->select('id', 'name')
+            ->get();
+
+        return Inertia::render('Courses/Purchased', [
+            ...$this->data,
+            'message'=>session('message'),
+            'status'=>session('status')
+        ]);
+    }
 }

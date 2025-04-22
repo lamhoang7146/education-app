@@ -8,21 +8,49 @@ const user = computed(() => usePage().props.auth.user);
 const isMode = computed(() => mode.value);
 import { Menu, MenuButton, MenuItems } from '@headlessui/vue'
 import {route} from "ziggy-js";
+import {handleRedirect} from "../AiModel.js";
 
 function switchTheme() {
     switchThemeOnLoad();
     mode.value = localStorage.theme;
 }
+    window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+let text = '';
+const handleVoice = ()=>{
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'vi';
+    // recognition.continuous = false;
+    recognition.interimResults = true;
+
+    recognition.addEventListener('result',(e)=>{
+        text = Array.from(e.results)
+            .map(result => result[0])
+            .map(result => result.transcript)
+            .join('');
+
+        console.log(text);
+    })
+
+    recognition.addEventListener('end', ()=>{
+        // recognition.start()
+        handleRedirect(text);
+    });
+
+    recognition.start();
+}
+
+
+
 </script>
 <template>
     <div
         class="h-[54px] transition-all !fixed top-4 xl:left-[280px] right-[20px] left-[20px] rounded-md z-40 bg-content dark:dark-bg-content box-shadow-copy px-6 flex items-center justify-between">
         <div class="flex items-center text-primary dark:dark-text-primary">
             <i  @click="emit('emitSidebar')" class="fa-solid fa-bars xl:hidden block mr-4 cursor-pointer text-xl"></i>
-            <i class="fa-solid fa-magnifying-glass mr-3"></i>
-            <div class="flex items-center">
-                <span class="mr-1 -translate-y-[2px] font-medium">Search</span>
-                <i class="fa-solid fa-list-ul"></i>
+            <div v-if="user" @click="handleVoice" class="flex items-center gap-x-2 cursor-pointer">
+                <i class="fa-solid fa-microphone"></i>
+                <span class="mr-1 -translate-y-[2px] font-medium">AI voice</span>
             </div>
         </div>
         <div class="text-primary dark:dark-text-primary transition-all flex items-center gap-x-5">

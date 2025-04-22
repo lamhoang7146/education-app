@@ -18,5 +18,4 @@ require_once  __DIR__ . '/payment.php';
     require_once __DIR__ . '/coursesManagementCoursesContentItem.php';
     require_once __DIR__ . '/analytics.php';
     require_once __DIR__ . '/aiAnalytics.php';
-
 //});

@@ -1,5 +1,5 @@
 import { GoogleGenerativeAI, SchemaType } from '@google/generative-ai';
-
+import {uris} from "./routes.js";
 const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_GENAI_API_KEY);
 
 const schema = {
@@ -46,6 +46,9 @@ const modelJson = genAI.getGenerativeModel({
     }
 });
 
+const redirectModal = genAI.getGenerativeModel({
+    model:'gemini-2.0-flash',
+})
 /**
  * Tạo câu hỏi trắc nghiệm tự động dựa trên thông số đầu vào
  * @param {string} topic - Chủ đề cần tạo câu hỏi
@@ -76,4 +79,32 @@ export async function generateQuizQuestions(topic,quizName ,numberOfQuestions, a
     } catch (error) {
         callback(null, error);
     }
+}
+
+export const handleRedirect = async (prompt)=>{
+    try{
+        const res = await redirectModal.generateContent(
+            `Generate a redirect URL for the following prompt: ${prompt}.
+
+        Routes available: ${uris}
+        if the user says the exact path of the route, you should return the route in the router available.
+        if user speak about their language you should return the route in the router available .
+        When returning a path, it must contain only the path I provided and must not contain double quotes to wrap the path.
+        if the prompt is not related to any route, return "null".
+        `
+
+        )
+        const redirect = res.response.text()
+        console.log(redirect)
+
+            if (!redirect.includes("null")) {
+                window.location.href = redirect;
+            } else {
+                console.error("No redirect URL found in the response.");
+            }
+
+    }catch(err){
+        console.error("Error generating redirect URL:", err);
+    }
+
 }

@@ -61,7 +61,9 @@ const handleRequest = ()=>{
         console.log('nothing')
     }
 }
-
+const turnBack = ()=>{
+    window.history.back()
+}
 </script>
 <template>
     <div v-if="message || status">
@@ -74,6 +76,9 @@ const handleRequest = ()=>{
     <div class="grid grid-cols-[2fr_1fr] gap-x-5 w-full">
         <div>
             <Container class="p-1">
+                <div @click="turnBack"
+                     class="text-base underline underline-offset-[2px] text-[#8278F2] cursor-pointer mb-2"><i
+                    class="fa-solid fa-arrow-left text-sm"></i> <span>Leave</span></div>
                 <div>
                     <TabGroup>
                         <TabList class="flex items-center gap-x-2 border-b-[1px] border-gray-200 pb-4">
