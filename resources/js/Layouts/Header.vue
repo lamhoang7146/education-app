@@ -33,13 +33,11 @@ const handleVoice = ()=>{
     })
 
     recognition.addEventListener('end', ()=>{
-        // recognition.start()
         handleRedirect(text);
     });
 
     recognition.start();
 }
-
 
 
 </script>
@@ -50,7 +48,7 @@ const handleVoice = ()=>{
             <i  @click="emit('emitSidebar')" class="fa-solid fa-bars xl:hidden block mr-4 cursor-pointer text-xl"></i>
             <div v-if="user" @click="handleVoice" class="flex items-center gap-x-2 cursor-pointer">
                 <i class="fa-solid fa-microphone"></i>
-                <span class="mr-1 -translate-y-[2px] font-medium">AI voice</span>
+                <span class="mr-1 -translate-y-[2px] font-medium">AI voice routes</span>
             </div>
         </div>
         <div class="text-primary dark:dark-text-primary transition-all flex items-center gap-x-5">
@@ -60,26 +58,25 @@ const handleVoice = ()=>{
             </transition>
             <Link v-if="!user" :href="route('login')">
                 <i class="fa-solid fa-user"></i>
-
             </Link>
             <!--      If user is exist      -->
             <Menu as="div" class="relative" v-if="user">
                 <MenuButton>
-                    <img class="size-10 rounded-full cursor-pointer" src="../../../public/storage/default.webp" alt="">
+                    <img class="size-10 rounded-full cursor-pointer" :src="user.image ? `/storage/${user.image}` : '/storage/default.webp'" alt="">
                 </MenuButton>
                 <transition enter-active-class="transition ease-out duration-100" enter-from-class="transform opacity-0 scale-95" enter-to-class="transform opacity-100 scale-100" leave-active-class="transition ease-in duration-75" leave-from-class="transform opacity-100 scale-100" leave-to-class="transform opacity-0 scale-95">
                     <MenuItems class="absolute w-60 py-2 rounded-md bg-content dark:dark-bg-content top-16 right-0 box-shadow-copy">
                         <div class="mx-2 my-2 px-4 flex items-center space-x-2">
-                            <img class="size-10 rounded-full" src="../../../public/storage/default.webp" alt="">
+                            <img class="size-10 rounded-full" :src="user.image ? `/storage/${user.image}` : '/storage/default.webp'" alt="">
                             <div>
                                 <h1 class="font-medium">{{user.name}}</h1>
                             </div>
                         </div>
                         <ul class="border-t border-b dark:border-gray-600 my-4">
-                            <li class="my-2 mx-2 py-2 px-4 flex items-center gap-x-4">
+                            <Link :href="route('profile.index')" class="my-2 mx-2 py-2 px-4 flex items-center gap-x-4">
                                 <i class="fa-solid fa-user"></i>
                                 <span>Profile</span>
-                            </li>
+                            </Link>
                         </ul>
                         <div class="px-2">
                             <Link

@@ -93,8 +93,7 @@ function formatCurrency(amount) {
                                      :src="item.user.image ? `/storage/${item.user.image}` : '/storage/default.webp'" alt="">
                             </div>
                             <div class="flex flex-col justify-center">
-                                <h1 class="text-sm font-medium">{{ item.user.name }}</h1>
-                                <p>{{ item.user.email }}</p>
+                                <h1 class="text-sm font-medium line-clamp-1">{{ item.user.name }}</h1>
                             </div>
                         </div>
                         <div class="text-sm flex items-center gap-x-2">

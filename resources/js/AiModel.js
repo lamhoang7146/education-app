@@ -101,6 +101,7 @@ export const handleRedirect = async (prompt)=>{
                 window.location.href = redirect;
             } else {
                 console.error("No redirect URL found in the response.");
+                alert("Sorry, I can't help with that.");
             }
 
     }catch(err){

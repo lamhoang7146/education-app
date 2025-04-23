@@ -1,8 +1,8 @@
 <script setup>
-import {nextTick, onMounted, onUnmounted, ref} from "vue";
+import {onMounted, onUnmounted, ref} from "vue";
 import Container from "../Components/Container.vue";
 import io from 'socket.io-client'
-const socket = io("http://localhost:8765");
+const socket = io(import.meta.env.VITE_AI_ANALYTICS_SERVER);
 const dataChunk = ref("");
 const inputValue = ref("");
 const isLoading = ref(false);
@@ -75,7 +75,7 @@ const scrollToBottom = () => {
 <template>
     <div class="h-[86vh] w-full flex flex-col">
         <!-- Chat history -->
-        <div id="chat-container" class="flex-1 overflow-y-auto p-4">
+        <div id="chat-container" class="flex-1 overflow-y-auto p-4 main">
             <div v-if="chatHistory.length === 0" class="flex items-center justify-center h-full">
                 <div class="text-center text-gray-500">
                     <p class="text-xl">Ask me about your data</p>
@@ -85,12 +85,13 @@ const scrollToBottom = () => {
 
             <div v-else class="space-y-4">
                 <div v-for="(message, index) in chatHistory" :key="index"
+
                      :class="{
-                         'bg-blue-100 rounded-lg p-3 ml-auto max-w-[80%]': message.role === 'user',
+                         'bg-content dark:dark-bg-content rounded-lg p-4 ml-auto max-w-[80%]': message.role === 'user',
                          'bg-red-100 rounded-lg p-3 max-w-[80%]': message.role === 'error',
-                         'bg-gray-100 rounded-lg p-3 max-w-[80%]': message.role === 'assistant'
+                         'bg-content dark:dark-bg-content rounded-lg p-4 max-w-[80%]': message.role === 'assistant'
                      }">
-                    <div v-if="message.role === 'user'" class="font-medium">
+                    <div v-if="message.role === 'user'" class="font-medium ">
                         {{ message.content }}
                     </div>
 
@@ -98,7 +99,7 @@ const scrollToBottom = () => {
                         {{ message.content }}
                     </div>
 
-                    <div v-else class="assistant-message whitespace-pre-wrap">{{ message.content }}</div>
+                    <div v-else class="assistant-message whitespace-pre-wrap ">{{ message.content }}</div>
                 </div>
 
                 <!-- Loading response -->

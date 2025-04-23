@@ -2,6 +2,7 @@
 import {usePage} from '@inertiajs/vue3';
 import {computed} from "vue";
 import SidebarSubmenuLink from "../Components/SidebarSubmenuLink.vue";
+import {route} from "ziggy-js";
 
 defineProps({
     sidebar: Boolean
@@ -16,7 +17,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
     <div
         :class="{'translate-x-[0%]':sidebar}"
         class="w-[260px] xl:-translate-x-0 -translate-x-[100%] transition-transform duration-300 bg-content dark:dark-bg-content fixed top-0 left-0 bottom-0 z-50 shadow-xl pl-2 pr-1 py-4 grid grid-rows-[40px_1fr] gap-y-4">
-        <div class="flex items-center ml-4 gap-x-2 h-10">
+        <div class="flex items-center ml-1 gap-x-2 h-10">
             <div>
                 <svg width="35" height="24" viewBox="0 0 34 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path class="text-[#8278F2]" fill-rule="evenodd" clip-rule="evenodd" d="M0.00183571 0.3125V7.59485C0.00183571 7.59485 -0.141502 9.88783 2.10473 11.8288L14.5469 23.6837L21.0172 23.6005L19.9794 10.8126L17.5261 7.93369L9.81536 0.3125H0.00183571Z" fill="currentColor"></path>
@@ -27,7 +28,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
             </div>
             <p class="font-medium">Community of the galaxy</p>
         </div>
-        <ul class="overflow-y-auto sidebar pr-2">
+        <ul class="overflow-y-auto main pr-2">
             <Link
                 :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Home'}"
                 @click="emit('emitSidebar')"

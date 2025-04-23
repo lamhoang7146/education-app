@@ -6,7 +6,7 @@
 
 
     .main::-webkit-scrollbar {
-       @apply w-[7px];
+       @apply w-[5px];
     }
 
     .main::-webkit-scrollbar-track {
