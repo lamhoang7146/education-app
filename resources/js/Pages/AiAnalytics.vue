@@ -117,7 +117,7 @@ const scrollToBottom = () => {
         </div>
 
         <!-- Input section -->
-        <div class="p-4 border-t">
+        <div class="border-t mb-2">
             <Container class="w-full rounded-3xl !p-2 !pr-6">
                 <form @submit.prevent="handleSubmit" class="relative flex items-center justify-between">
                     <input

@@ -47,7 +47,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/List'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-sm mr-2"></i></span>List
                 </Link>
                 <Link
                     v-if="user"
@@ -55,7 +55,15 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/Purchased'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Purchased course
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-cart-shopping text-sm mr-2"></i></span>Purchased course
+                </Link>
+                <Link
+                    v-if="user"
+                    :href="route('courses.find-ai')"
+                    @click="emit('emitSidebar')"
+                    :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Courses/CoursesAI'}"
+                    class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-robot text-sm mr-2"></i></span>Find course by AI
                 </Link>
             </SidebarSubmenuLink>
             <SidebarSubmenuLink v-if="user && permissions?.includes('Courses management')" icon="fa-bars-progress" name="Courses management" reference="CoursesManagement" :component="component">
@@ -65,7 +73,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagementCategory/Category'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Category
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-sm mr-2"></i></span>Category
                 </Link>
                 <Link
                     v-if="permissions?.includes('Courses')"
@@ -73,7 +81,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'CoursesManagementCourses/Courses'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>Courses
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-sm mr-2"></i></span>Courses
                 </Link>
 
             </SidebarSubmenuLink>
@@ -84,7 +92,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'User/List'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-sm mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
             <SidebarSubmenuLink
@@ -99,7 +107,7 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     @click="emit('emitSidebar')"
                     :class="{'dark-selected hover:dark-selected dark:hover:dark-selected':component === 'Role/RoleList'}"
                     class="flex items-center hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 pl-4 pr-2 rounded-md transition">
-                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-xs mr-2"></i></span>List
+                    <span class="-translate-y-[2px]"><i class="fa-solid fa-list-ul text-sm mr-2"></i></span>List
                 </Link>
             </SidebarSubmenuLink>
 
@@ -111,8 +119,8 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     :href="route('analytics')"
                     class=" flex justify-between items-center pl-6 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
                     <div class="flex items-center ">
-                        <div class="mr-3">
-                            <i class="fa-solid fa-chart-simple"></i>
+                        <div class="mr-3 -translate-y-[2px]">
+                            <i class="fa-solid fa-chart-simple text-sm"></i>
                         </div>
                         <p>Analytics</p>
                     </div>
@@ -125,8 +133,8 @@ const permissions = usePage().props?.auth?.user?.permissions;
                     :href="route('ai.analytics')"
                     class=" flex justify-between items-center pl-5 pr-2 hover:hover-selected dark:hover:dark-hover-selected py-2 mb-2 rounded-md transition">
                     <div class="flex items-center ">
-                        <div class="mr-3">
-                            <i class="fa-solid fa-robot"></i>
+                        <div class="mr-3 -translate-y-[2px]">
+                            <i class="fa-solid fa-robot text-sm"></i>
                         </div>
                         <p>AI analytics</p>
                     </div>

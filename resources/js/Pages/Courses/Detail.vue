@@ -61,7 +61,12 @@ const handleRequest = ()=>{
         console.log('nothing')
     }
 }
-const turnBack = ()=>{
+const turnBack = () =>{
+    if(usePage().props.previousUrl.includes('learning')){
+        router.get(route('courses.index'))
+        return
+    }
+
     window.history.back()
 }
 </script>

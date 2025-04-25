@@ -41,6 +41,7 @@ class HandleInertiaRequests extends Middleware
                     'permissions' => $request->user() ? $request->user()->permissions->pluck('slug')->toArray() : [],
                 ])
                 : null,
+            'previousUrl' => fn () => url()->previous(),
         ]);
     }
 }

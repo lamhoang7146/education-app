@@ -1,30 +1,39 @@
 <script setup>
 import Container from "../../Components/Container.vue";
-import {Listbox, ListboxButton, ListboxOption, ListboxOptions} from "@headlessui/vue";
-import {ref, watch} from "vue";
+import Modal from "../../Components/Modal.vue"
+import {ref} from "vue";
+import {router, useForm} from "@inertiajs/vue3";
+import {vAutoAnimate} from '@formkit/auto-animate';
+import Button from "../../Components/Button.vue";
 import {route} from "ziggy-js";
-import {router} from "@inertiajs/vue3";
-import PaginationLinks from "../../Components/PaginationLinks.vue";
+
 const props = defineProps({
-    courses:Object,
-    category_courses:Object,
-    search:String,
-})
-const params = route().params;
+    courses_by_AI:Object
+});
+console.log(props.courses_by_AI)
+const isOpen = ref(false)
+const handleOpenModal = ()=>{
+    isOpen.value = true
+}
 
-let selectedCategory = ref(props?.category_courses?.find(item=> item?.id === parseInt(params?.category_courses_id)));
-const categoryCoursesParams = ref([{id:null,name:'Select category'},...props?.category_courses]);
-watch(selectedCategory, (newCategory) => {
-    router.get(route('courses.index'), {
-        category_courses_id: newCategory ? newCategory?.id : null,
+const handleCloseModal = ()=>{
+    isOpen.value = false
+}
+
+const formSearch = useForm({
+    search:""
+})
+
+const handleSubmit = ()=>{
+    formSearch.post(route("courses.send.find-ai"),{
+        onSuccess:()=>{
+            handleCloseModal();
+            formSearch.reset();
+        },
+        onError: (errors) => {
+            console.error(errors);
+        }
     })
-})
-function calculateFinalPrice(price, voucher) {
-    const discountPercentage = parseFloat(voucher) / 100;
-
-    const discountAmount = price * discountPercentage;
-
-    return price - discountAmount;
 }
 
 function formatCurrency(amount) {
@@ -34,52 +43,38 @@ function formatCurrency(amount) {
     }).format(amount);
 }
 
-
-const search = ref(props.search);
-
-const handleFilterByAi = ()=>{
-    router.get(route('courses.index'), {
-        search: search.value ,
-    })
-}
 </script>
 <template>
-    <Container class="grid grid-cols-2 gap-x-4">
-        <div class="grid grid-cols-2 gap-x-4">
-            <form @submit.prevent="handleFilterByAi">
-                <input
-                        v-model="search"
-                       class="py-2 w-full outline-0 border-[1px] order-gray-200 rounded-md px-4 placeholder:text-primary placeholder:dark:dark-text-primary bg-transparent"
-                       type="text" placeholder="Search courses by AI...">
-            </form>
-            <div>
-                <Listbox v-model="selectedCategory">
-                    <div class="relative">
-                        <ListboxButton class="border-[1px] border-gray-200 rounded-md py-2 px-4 text-left min-w-40 text-sm">
-                            {{ selectedCategory?.name || 'Select category' }}
-                        </ListboxButton>
-                        <transition name="list">
-                            <ListboxOptions
-                                class="absolute top-[120%] bg-behind dark:dark-bg-behind rounded-md p-2 box-shadow-copy w-full z-30">
-                                <ListboxOption
-                                    class="cursor-pointer p-2 text-sm hover:hover-selected dark:hover:dark-hover-selected transition rounded-md"
-                                    v-for="item in categoryCoursesParams"
-                                    :key="item.id"
-                                    :value="item">
-                                    {{ item.name }}
-                                </ListboxOption>
-                            </ListboxOptions>
-                        </transition>
+    <Modal @close="handleCloseModal" :is-open="isOpen">
+        <Container @click.stop class="w-[500px]">
+            <h1 class="text-left font-medium text-lg">Hi there, What kind of course you want to find?</h1>
+            <form @submit.prevent="handleSubmit" class="mt-2">
+                <div>
+                    <label class="text-sm block mb-2 cursor-pointer font-normal" for="descriptionAddCategory">Search course by AI</label>
+                    <textarea v-model="formSearch.search" placeholder="Search course by AI..." rows="5"
+                              id="descriptionAddCategory"
+                              class="resize-none disabled:opacity-70 w-full py-[7px] px-[14px] border-gray-300 border-[1px] rounded-md transition-all focus:outline-none focus:ring-1 focus:ring-[#7367F0] bg-transparent"></textarea>
+                    <div v-auto-animate>
+                        <p v-if="formSearch.errors.search" class="text-red-400 mt-1 text-sm">
+                            {{ formSearch.errors.search }}</p>
                     </div>
-                </Listbox>
-            </div>
-        </div>
+                </div>
+                <div class="flex justify-end gap-x-4 mt-4">
+                    <span @click="handleCloseModal"
+                          class="border-[1px] border-gray-200 px-3 rounded-md flex items-center justify-center cursor-pointer">Cancel
+                    </span>
+                    <Button :disabled="formSearch.processing" class="px-3 text-sm">Filter</Button>
+                </div>
+            </form>
+        </Container>
+    </Modal>
+    <Container>
+        <span @click="handleOpenModal" class="cursor-pointer text-center bg-[#7367F0] text-sm text-white p-2 px-4 rounded-md font-medium disabled:opacity-70 disabled:cursor-wait transition"><i class="fa-solid fa-filter text-sm mr-1"></i>Filter courses</span>
     </Container>
-    <div class="grid grid-cols-4 gap-x-5 gap-y-5 mt-6 ">
-        <Link :href="route('courses.detail',{id:item.id})" class="rounded-md overflow-hidden box-shadow-copy" v-for="item in courses.data">
+    <div v-if="courses_by_AI && courses_by_AI.length > 0" class="grid grid-cols-4 gap-x-5 gap-y-5 mt-6 ">
+        <Link :href="route('courses.detail',{id:item.id})" class="rounded-md overflow-hidden box-shadow-copy" v-for="item in courses_by_AI">
             <div class="relative">
                 <img class="h-40 object-cover w-full" :src="`/storage/${item.thumbnail}`" alt="">
-                <div class="text-xs absolute left-4 top-3 bg-gray-200 py-1 px-3 text-black font-medium rounded-full">{{ item.category_courses.name }}</div>
                 <div class="text-xs absolute top-4 right-4">
                                             <span v-if="item.level.includes('Easy')"
                                                   class="bg-green-100 py-1 px-3 rounded-full text-green-500  font-medium">Easy</span>
@@ -128,8 +123,7 @@ const handleFilterByAi = ()=>{
             </div>
         </Link>
     </div>
-    <PaginationLinks class="my-4" :paginator="courses" />
-
+    <Container class="mt-4" v-else>Nothing</Container>
 </template>
 <style scoped>
 .list-enter-from, .list-leave-to {

@@ -10,6 +10,7 @@ use App\Models\QuizResult;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 use Inertia\Inertia;
 
 class CoursesController extends Controller
@@ -17,21 +18,40 @@ class CoursesController extends Controller
     private array $data = [];
     public function index()
     {
-        $this->data['courses'] = Courses::with([
-            'user:id,name,image',
-            'categoryCourses:id,name',
-        ])->select('id', 'title', 'price', 'is_free', 'level', 'status', 'category_courses_id', 'user_id','thumbnail','created_at')
-            ->filter([request('category_courses_id')])
-            ->where('status', 1)
-            ->paginate(8)->withQueryString();
-        $this->data['category_courses'] = Category_courses::where('status', 1)
-            ->select('id', 'name')
-            ->get();
+            $this->data['courses'] = Courses::with([
+                'user:id,name,image',
+                'categoryCourses:id,name',
+            ])->select('id', 'title', 'price', 'is_free', 'level', 'status', 'category_courses_id', 'user_id','thumbnail','created_at')
+                ->filter([request('category_courses_id')])
+                ->where('status', 1)
+                ->paginate(8)->withQueryString();
+            $this->data['category_courses'] = Category_courses::where('status', 1)
+                ->select('id', 'name')
+                ->get();
+
+
         return Inertia::render('Courses/List',[
             ...$this->data,
             'message'=>session('message'),
             'status'=>session('status')
         ]);
+    }
+    public function coursesByAI()
+    {
+        return Inertia::render('Courses/CoursesAI',[
+            ...$this->data,
+            "courses_by_AI"=>session('courses_by_AI')
+        ]);
+    }
+
+    public function handleCoursesByAI(){
+        $server = env('VITE_AI_ANALYTICS_SERVER');
+        if(request('search') && request('search') !== '') {
+            $search = request('search');
+            $response = Http::get("{$server}/api/get-courses-ai?q={$search}");
+            return back()->with(['courses_by_AI'=>$response->json()]);
+        }
+        return back();
     }
 
     public function detail($id)
