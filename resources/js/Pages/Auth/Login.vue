@@ -68,8 +68,7 @@ const submit = () => {
         <Button class="w-full" :disabled="form.processing">Login</Button>
         <MessageSession
             class="mt-4"
-            :status="status"
-            :message="message"
+
         />
         <div class="flex items-center space-x-2 justify-center mt-6">
             <p>New on our platform?</p>

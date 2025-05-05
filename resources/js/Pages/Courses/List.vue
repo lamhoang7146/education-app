@@ -17,6 +17,7 @@ const categoryCoursesParams = ref([{id:null,name:'Select category'},...props?.ca
 watch(selectedCategory, (newCategory) => {
     router.get(route('courses.index'), {
         category_courses_id: newCategory ? newCategory?.id : null,
+        search:props.search
     })
 })
 function calculateFinalPrice(price, voucher) {
@@ -37,20 +38,21 @@ function formatCurrency(amount) {
 
 const search = ref(props.search);
 
-const handleFilterByAi = ()=>{
+const handleSearchName = ()=>{
     router.get(route('courses.index'), {
         search: search.value ,
+        category_courses_id:params?.category_courses_id
     })
 }
 </script>
 <template>
     <Container class="grid grid-cols-2 gap-x-4">
         <div class="grid grid-cols-2 gap-x-4">
-            <form @submit.prevent="handleFilterByAi">
+            <form @submit.prevent="handleSearchName">
                 <input
                         v-model="search"
                        class="py-2 w-full outline-0 border-[1px] order-gray-200 rounded-md px-4 placeholder:text-primary placeholder:dark:dark-text-primary bg-transparent"
-                       type="text" placeholder="Search courses by AI...">
+                       type="text" placeholder="Search courses...">
             </form>
             <div>
                 <Listbox v-model="selectedCategory">
@@ -75,7 +77,7 @@ const handleFilterByAi = ()=>{
             </div>
         </div>
     </Container>
-    <div class="grid grid-cols-4 gap-x-5 gap-y-5 mt-6 ">
+    <div v-if="courses.data.length > 0" class="grid grid-cols-4 gap-x-5 gap-y-5 mt-6">
         <Link :href="route('courses.detail',{id:item.id})" class="rounded-md overflow-hidden box-shadow-copy" v-for="item in courses.data">
             <div class="relative">
                 <img class="h-40 object-cover w-full" :src="`/storage/${item.thumbnail}`" alt="">
@@ -128,7 +130,10 @@ const handleFilterByAi = ()=>{
             </div>
         </Link>
     </div>
-    <PaginationLinks class="my-4" :paginator="courses" />
+    <Container v-else class="my-4">
+        <h1>There is no courses!</h1>
+    </Container>
+    <PaginationLinks v-if="courses.data.length > 0" class="my-4" :paginator="courses" />
 
 </template>
 <style scoped>

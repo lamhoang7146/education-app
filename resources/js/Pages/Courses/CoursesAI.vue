@@ -10,7 +10,6 @@ import {route} from "ziggy-js";
 const props = defineProps({
     courses_by_AI:Object
 });
-console.log(props.courses_by_AI)
 const isOpen = ref(false)
 const handleOpenModal = ()=>{
     isOpen.value = true
@@ -71,18 +70,18 @@ function formatCurrency(amount) {
     <Container>
         <span @click="handleOpenModal" class="cursor-pointer text-center bg-[#7367F0] text-sm text-white p-2 px-4 rounded-md font-medium disabled:opacity-70 disabled:cursor-wait transition"><i class="fa-solid fa-filter text-sm mr-1"></i>Filter courses</span>
     </Container>
-    <div v-if="courses_by_AI && courses_by_AI.length > 0" class="grid grid-cols-4 gap-x-5 gap-y-5 mt-6 ">
+    <div v-if="courses_by_AI && courses_by_AI?.length > 0" class="grid grid-cols-4 gap-x-5 gap-y-5 mt-6 ">
         <Link :href="route('courses.detail',{id:item.id})" class="rounded-md overflow-hidden box-shadow-copy" v-for="item in courses_by_AI">
             <div class="relative">
-                <img class="h-40 object-cover w-full" :src="`/storage/${item.thumbnail}`" alt="">
+                <img class="h-40 object-cover w-full" :src="`/storage/${item?.thumbnail}`" alt="">
                 <div class="text-xs absolute top-4 right-4">
-                                            <span v-if="item.level.includes('Easy')"
+                                            <span v-if="item?.level?.includes('Easy')"
                                                   class="bg-green-100 py-1 px-3 rounded-full text-green-500  font-medium">Easy</span>
-                    <span v-if="item.level.includes('Medium')"
+                    <span v-if="item?.level?.includes('Medium')"
                           class="bg-yellow-100 py-1 px-3 rounded-full text-yellow-500  font-medium">Medium</span>
-                    <span v-if="item.level.includes('Hard')"
+                    <span v-if="item?.level.includes('Hard')"
                           class="bg-red-100 py-1 px-3 rounded-full text-red-500  font-medium">Hard</span>
-                    <span v-if="item.level.includes('Extremely')"
+                    <span v-if="item?.level?.includes('Extremely')"
                           class="bg-purple-100 py-1 px-3 rounded-full text-purple-500  font-medium">Extremely</span>
                 </div>
             </div>
@@ -90,27 +89,27 @@ function formatCurrency(amount) {
                 <div class="flex items-center justify-between">
                     <div class="text-xs">
                         <span class=" px-3 py-1 font-medium  rounded-md bg-green-100 text-green-500"
-                              v-if="item.status">Active</span>
+                              v-if="item?.status">Active</span>
                         <span class=" px-3 py-1 rounded-md bg-red-100 text-red-500" v-else>Suspended</span>
                     </div>
                     <div class="text-sm">
                         <span
-                            v-if="!item.is_free"
+                            v-if="!item?.is_free"
                             class="text-[#7367F0] font-medium">{{
                                 formatCurrency(item.price)
                             }}</span>
                         <span v-else class="text-[#7367F0] font-medium">Free</span>
                     </div>
                 </div>
-                <h1 class="mt-3 mb-1 font-medium text-sm line-clamp-2 h-12">{{ item.title }}</h1>
+                <h1 class="mt-3 mb-1 font-medium text-sm line-clamp-2 h-12">{{ item?.title }}</h1>
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-x-2">
                         <div>
                             <img class="h-8 w-8 object-center rounded-full"
-                                 :src="item.user.image ? `/storage/${item.user.image}` : '/storage/default.webp'" alt="">
+                                 :src="item?.user?.image ? `/storage/${item?.user?.image}` : '/storage/default.webp'" alt="">
                         </div>
                         <div class="flex flex-col justify-center">
-                            <h1 class="text-sm font-medium line-clamp-1">{{ item.user.name }}</h1>
+                            <h1 class="text-sm font-medium line-clamp-1">{{ item?.user?.name }}</h1>
                         </div>
                     </div>
                     <div class="text-sm flex items-center gap-x-2">

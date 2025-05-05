@@ -7,6 +7,7 @@ use App\Models\Category_courses;
 use App\Models\Courses;
 use App\Models\Quiz;
 use App\Models\QuizResult;
+use App\Models\user_courses;
 use App\Models\Video;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -22,7 +23,7 @@ class CoursesController extends Controller
                 'user:id,name,image',
                 'categoryCourses:id,name',
             ])->select('id', 'title', 'price', 'is_free', 'level', 'status', 'category_courses_id', 'user_id','thumbnail','created_at')
-                ->filter([request('category_courses_id')])
+                ->filter([request('category_courses_id')],request('search'))
                 ->where('status', 1)
                 ->paginate(8)->withQueryString();
             $this->data['category_courses'] = Category_courses::where('status', 1)
@@ -32,6 +33,7 @@ class CoursesController extends Controller
 
         return Inertia::render('Courses/List',[
             ...$this->data,
+            'search'=> request('search'),
             'message'=>session('message'),
             'status'=>session('status')
         ]);
@@ -102,6 +104,15 @@ class CoursesController extends Controller
             return redirect()->route('login');
         }
         $user_id = Auth::user()->id;
+        $is_buy = user_courses::where('user_id', $user_id)
+            ->where('courses_id', $id)
+            ->exists();
+        if(empty($is_buy) && !Courses::find($id)->is_free){
+            return back()-> with([
+                'message'=>'You have not purchased this course yet.',
+                    'status'=>false
+                ]);
+        }
 
         $this->data['courses_detail'] = Courses::with([
             'categoryCourses',

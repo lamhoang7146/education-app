@@ -55,6 +55,7 @@ class VerificationEmailController extends Controller
             ]);
         }
 
+
         if (!$user->hasVerifiedEmail()) {
             $user->markEmailAsVerified();
         }

@@ -3,8 +3,10 @@ import Container from '../Components/Container.vue';
 import { route } from 'ziggy-js';
 import {onMounted} from "vue";
 const props = defineProps({
-    categories: Object
+    categories: Object,
+    popularCourses:Object
 });
+console.log(props.popularCourses)
 import {ref} from 'vue';
 const goals = ref([
     {
@@ -113,6 +115,13 @@ const stopAutoPlay = () => {
     clearInterval(slideInterval);
 };
 
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND',
+    }).format(amount);
+}
+
 onMounted(() => {
     startAutoPlay();
 });
@@ -146,11 +155,52 @@ onMounted(() => {
             <h1 class="text-xl font-medium">All the skills you need in one place</h1>
             <p>From critical skills to technical topics, Galaxy supports your professional development.</p>
         </div>
-        <div class="grid grid-cols-4 gap-x-4">
-            <div v-for="i in 4">
-                <div></div>
-                <Container></Container>
-            </div>
+        <div class="grid grid-cols-4 gap-4">
+            <Link :href="route('courses.detail',{id:course.id})" v-for="course in popularCourses">
+                <div class="shadow rounded-md overflow-hidden">
+                    <div class="h-48 relative">
+                        <img class="w-full h-full object-cover" :src="`/storage/${course.thumbnail}`" alt="">
+                        <div class="absolute text-xs top-4 right-4">
+                            <span v-if="course.level.includes('Easy')"
+                                  class=" bg-green-100 py-1 px-3 rounded-full text-green-500  font-medium">Easy</span>
+                            <span v-if="course.level.includes('Medium')"
+                                  class="bg-yellow-100 py-1 px-3 rounded-full text-yellow-500  font-medium">Medium</span>
+                            <span v-if="course.level.includes('Hard')"
+                                  class="bg-red-100 py-1 px-3 rounded-full text-red-500  font-medium">Hard</span>
+                            <span v-if="course.level.includes('Extremely')"
+                                  class="bg-purple-100 py-1 px-3 rounded-full text-purple-500  font-medium">Extremely</span>
+                        </div>
+                    </div>
+
+                    <div class="p-4">
+                        <div class="mb-2 flex items-center justify-between">
+                            <div class="text-xs">
+                        <span class=" px-3 py-1 font-medium  rounded-md bg-green-100 text-green-500"
+                              v-if="course.status">Active</span>
+                                <span class=" px-3 py-1 rounded-md bg-red-100 text-red-500" v-else>Suspended</span>
+                            </div>
+                            <div class="text-sm">
+                        <span
+                            v-if="!course.is_free"
+                            class="text-[#7367F0] font-medium">{{
+                                formatCurrency(course.price)
+                            }}</span>
+                                <span v-else class="text-[#7367F0] font-medium">Free</span>
+                            </div>
+                        </div>
+                        <p class="line-clamp-2 font-medium leading-5 text-sm">{{ course.title }}</p>
+                        <div class="flex items-center justify-between">
+                        <p class="mt-2 flex items-center gap-x-1"><i class="text-sm fa-solid fa-user"></i><span>{{course?.user_courses_count}}</span></p>
+                            <div class="text-sm flex items-center gap-x-2">
+                                <i class="fa-regular fa-clock text-sm"></i>
+                                <span class="-translate-y-[.5px]">
+                            {{ course?.created_at }}
+                        </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </Link>
         </div>
     </Container>
     <Container class="my-4">
@@ -298,6 +348,48 @@ onMounted(() => {
             >
                 <i class="fa-solid fa-angle-right"></i>
             </button>
+        </div>
+    </div>
+    <div class="bg-black !text-white p-8 mt-4 rounded-md grid grid-cols-4">
+        <div>
+            <h1 class="font-medium mb-4">About</h1>
+            <div class="space-y-2">
+                <p class="text-xs">About us</p>
+                <p class="text-xs">Careers</p>
+                <p class="text-xs">Contact us</p>
+                <p class="text-xs">Blog</p>
+                <p class="text-xs">Investors</p>
+            </div>
+        </div>
+        <div>
+            <h1 class="font-medium mb-4">Discover COTG</h1>
+            <div class="space-y-2">
+                <p class="text-xs">About us</p>
+                <p class="text-xs">Careers</p>
+                <p class="text-xs">Contact us</p>
+                <p class="text-xs">Blog</p>
+                <p class="text-xs">Investors</p>
+            </div>
+        </div>
+        <div>
+            <h1 class="font-medium mb-4">COTG for Business</h1>
+            <div class="space-y-2">
+                <p class="text-xs">About us</p>
+                <p class="text-xs">Careers</p>
+                <p class="text-xs">Contact us</p>
+                <p class="text-xs">Blog</p>
+                <p class="text-xs">Investors</p>
+            </div>
+        </div>
+        <div>
+            <h1 class="font-medium mb-4">Legal & Accessibility</h1>
+            <div class="space-y-2">
+                <p class="text-xs">About us</p>
+                <p class="text-xs">Careers</p>
+                <p class="text-xs">Contact us</p>
+                <p class="text-xs">Blog</p>
+                <p class="text-xs">Investors</p>
+            </div>
         </div>
     </div>
 </template>

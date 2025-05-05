@@ -67,11 +67,21 @@ const turnBack = () =>{
         return
     }
 
+    if(usePage().props.previousUrl.includes('purchased')){
+        router.get(route('courses.purchased'))
+        return
+    }
+
+    if(usePage().props.previousUrl.includes('courses')){
+        router.get(route('courses.index'))
+        return
+    }
+
     window.history.back()
 }
 </script>
 <template>
-    <div v-if="message || status">
+    <div>
         <MessageSession
             class="mb-4"
             :message="message"
@@ -154,12 +164,11 @@ const turnBack = () =>{
                     </div>
                 </div>
                 <div class="flex items-center justify-between">
-                    <div v-if="!course.is_free" class="space-x-2">
-                        <span class="line-through text-gray-500 text-sm">{{ formatCurrency(parseInt(course.price)) }}</span>
+                    <div v-if="!course.is_free" class="">
                         <span
-                            class="text-[#7367F0] font-medium text-base">{{
-                                formatCurrency(calculateFinalPrice(parseInt(course.price), 10))
-                            }}</span>
+                            class="text-[#7367F0] font-medium text-base">
+                            {{ formatCurrency(parseInt(course.price)) }}
+                        </span>
                     </div>
                 </div>
                 <div  class="mt-2">

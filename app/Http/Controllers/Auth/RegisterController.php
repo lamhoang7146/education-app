@@ -17,7 +17,6 @@ class RegisterController extends Controller
 
     public function register(Redis $redis)
     {
-
 //------------------- Validations -------------------//
         $credentials = request()->validate([
             'name' => 'required|string|max:255|min:3',

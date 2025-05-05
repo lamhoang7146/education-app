@@ -7,7 +7,7 @@ require_once __DIR__ . '/courses.php';
 require_once __DIR__ . '/payment.php';
 require_once __DIR__ . '/profile.php';
 
-Route::middleware(['twoStepVerification','auth'])->group(function () {
+//Route::middleware(['twoStepVerification','auth'])->group(function () {
     require_once __DIR__ . '/roles.php';
     require_once __DIR__ . '/user.php';
     require_once __DIR__ . '/coursesManagementCategory.php';
@@ -19,4 +19,4 @@ Route::middleware(['twoStepVerification','auth'])->group(function () {
     require_once __DIR__ . '/coursesManagementCoursesContentItem.php';
     require_once __DIR__ . '/analytics.php';
     require_once __DIR__ . '/aiAnalytics.php';
-});
+//});

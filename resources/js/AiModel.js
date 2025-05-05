@@ -92,7 +92,6 @@ export const handleRedirect = async (prompt)=>{
         When returning a path, it must contain only the path I provided and must not contain double quotes to wrap the path.
         if the prompt is not related to any route, return "null".
         `
-
         )
         const redirect = res.response.text()
         console.log(redirect)

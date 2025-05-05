@@ -5,7 +5,9 @@ namespace App\Http\Controllers\Profile;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class ProfileController extends Controller
@@ -45,5 +47,20 @@ class ProfileController extends Controller
             'message' => 'Password updated successfully',
             'status'=>true
         ]);
+    }
+    public function updateAvatar(): void
+    {
+        request()->validate([
+            'image' => 'nullable|file|mimes:jpeg,png,jpg,gif,svg|max:3072',
+        ]);
+        $user = Auth::user()->only(['image']);
+        if (request()->hasFile('image')) {
+            if ($user['image']) {
+                Storage::disk('public')->delete($user['image']);
+            }
+            $path = Storage::disk('public')->put('profile', request()->image);
+            $user['image'] = $path;
+            Auth::user()->update(['image' => $path]);
+        }
     }
 }

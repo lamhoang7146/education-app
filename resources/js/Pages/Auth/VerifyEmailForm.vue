@@ -1,4 +1,4 @@
-<script setup>
+  <script setup>
 import LayoutAuth from "../../Layouts/LayoutAuth.vue";
 import MessageSession from "../../Components/MessageSession.vue";
 defineOptions({
